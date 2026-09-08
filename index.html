@@ -86,7 +86,7 @@
     <p class="label label--red rv">Tuning Parts &amp; Dyno Center · Amman, Jordan</p>
     <h1 class="hero-title display">
       <span class="ln"><span>We build</span></span>
-      <span class="ln"><span class="accent">power.</span></span>
+      <span class="ln"><span class="grad-text">power.</span></span>
     </h1>
     <div class="hero-meta">
       <p class="hero-sub">Since 2003, Jordan's performance workshop for people who want numbers, not claims. Parts sourced from the world's best. Power proven on our own dyno.</p>
@@ -110,7 +110,7 @@
   </div>
 </section>
 
-<section class="section">
+<section class="section acc-cyan">
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">01 / Capabilities</span><span class="label">WHAT WE DO</span></div>
@@ -158,7 +158,7 @@
   </div>
 </section>
 
-<section class="section section--panel">
+<section class="section section--panel acc-orange">
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">02 / Dyno Center</span><span class="label">PROOF, NOT PROMISES</span></div>
@@ -169,9 +169,21 @@
 <div class="dyno-chart rv">
   <svg viewBox="0 0 820 360" role="img" aria-label="Dyno chart: peak 404 horsepower at 6500 rpm and 328 lb-ft of torque at 6000 rpm">
     <defs>
+      <!-- Power curve heats up as revs rise: gold -> amber -> crimson -->
+      <linearGradient id="hpStroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#ffc531"/>
+        <stop offset="45%"  stop-color="#ff7a1a"/>
+        <stop offset="100%" stop-color="#ff2d55"/>
+      </linearGradient>
+      <!-- Torque runs cool: cyan -> violet -->
+      <linearGradient id="tqStroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#22d3ee"/>
+        <stop offset="100%" stop-color="#8b6bff"/>
+      </linearGradient>
       <linearGradient id="hpFade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ff2b30" stop-opacity="0.30"/>
-        <stop offset="100%" stop-color="#ff2b30" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="#ff7a1a" stop-opacity="0.42"/>
+        <stop offset="55%"  stop-color="#ff2d55" stop-opacity="0.16"/>
+        <stop offset="100%" stop-color="#8b6bff" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <line class="dyno-gridline" x1="52" y1="320.0" x2="798" y2="320.0"/>
@@ -194,7 +206,8 @@
     <path class="dyno-area" d="M 52.0 277.4 C 72.7 269.2, 134.9 245.9, 176.3 228.0 C 217.8 210.2, 259.2 189.5, 300.7 170.4 C 342.1 151.3, 383.6 131.3, 425.0 113.4 C 466.4 95.6, 518.2 75.1, 549.3 63.3 C 580.4 51.5, 590.8 45.2, 611.5 42.7 C 632.2 40.2, 652.9 42.9, 673.7 48.2 C 694.4 53.5, 715.1 64.0, 735.8 74.3 C 756.6 84.6, 787.6 104.0, 798.0 110.0 L 798.0 320.0 L 52.0 320.0 Z"/>
     <path class="dyno-curve dyno-curve--tq" d="M 52.0 209.5 C 72.7 201.5, 134.9 175.7, 176.3 161.4 C 217.8 147.2, 259.2 133.5, 300.7 123.7 C 342.1 113.9, 383.6 107.2, 425.0 102.4 C 466.4 97.6, 518.2 96.0, 549.3 94.9 C 580.4 93.7, 590.8 92.0, 611.5 95.6 C 632.2 99.1, 652.9 107.5, 673.7 116.1 C 694.4 124.8, 715.1 136.7, 735.8 147.7 C 756.6 158.7, 787.6 176.3, 798.0 182.0" data-draw/>
     <path class="dyno-curve dyno-curve--hp" d="M 52.0 277.4 C 72.7 269.2, 134.9 245.9, 176.3 228.0 C 217.8 210.2, 259.2 189.5, 300.7 170.4 C 342.1 151.3, 383.6 131.3, 425.0 113.4 C 466.4 95.6, 518.2 75.1, 549.3 63.3 C 580.4 51.5, 590.8 45.2, 611.5 42.7 C 632.2 40.2, 652.9 42.9, 673.7 48.2 C 694.4 53.5, 715.1 64.0, 735.8 74.3 C 756.6 84.6, 787.6 104.0, 798.0 110.0" data-draw/>
-    <circle cx="611.5" cy="42.7" r="4.5" fill="#ff2b30"/>
+    <circle cx="611.5" cy="42.7" r="5" fill="#ff2d55"/>
+    <circle cx="611.5" cy="42.7" r="11" fill="none" stroke="#ff2d55" stroke-opacity="0.35"/>
     <text class="dyno-tick" x="621.5" y="32.7" fill="#f4f6f8">404 HP @ 6,500</text>
   </svg>
   <div class="dyno-legend">
@@ -203,15 +216,15 @@
     <span class="dyno-key dyno-key--note">Sample run · 2.0T · after custom map</span>
   </div>
   <div class="dyno-readout">
-    <div><span class="label">Peak power</span><b data-count="404">0</b></div>
-    <div><span class="label">Peak torque</span><b data-count="328">0</b></div>
-    <div><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
+    <div class="acc-orange"><span class="label">Peak power</span><b data-count="404">0</b></div>
+    <div class="acc-cyan"><span class="label">Peak torque</span><b data-count="328">0</b></div>
+    <div class="acc-lime"><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
   </div>
 </div>
   </div>
 </section>
 
-<section class="section">
+<section class="section acc-violet">
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">03 / Partners</span><span class="label">THE BRANDS WE CARRY</span></div>
@@ -223,7 +236,7 @@
   <div class="marquee marquee--rev"><div class="marquee-track"><span class="brand-mark"><img src="assets/brands/clutch-masters.webp" alt="Clutch Masters" title="Clutch Masters" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/tilton.webp" alt="Tilton" title="Tilton" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/zestino.webp" alt="Zestino Tyres" title="Zestino Tyres" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/cusco.webp" alt="Cusco" title="Cusco" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/cartech.webp" alt="CarTech" title="CarTech" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/megan-racing.webp" alt="Megan Racing" title="Megan Racing" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/hp-tuners.webp" alt="HP Tuners" title="HP Tuners" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/milltek.webp" alt="Milltek Sport" title="Milltek Sport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/earls.webp" alt="Earl's" title="Earl's" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/dbilas.webp" alt="Dbilas" title="Dbilas" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/autometer.webp" alt="AutoMeter" title="AutoMeter" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/samco.webp" alt="Samco Sport" title="Samco Sport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/d2-racing.webp" alt="D2 Racing" title="D2 Racing" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/ferrea.webp" alt="Ferrea" title="Ferrea" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/ngk.webp" alt="NGK" title="NGK" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/racechip.webp" alt="RaceChip" title="RaceChip" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/brian-crower.webp" alt="Brian Crower" title="Brian Crower" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/sytec.webp" alt="Sytec Motorsport" title="Sytec Motorsport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/garrett.webp" alt="Garrett" title="Garrett" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/je-pistons.webp" alt="JE Pistons" title="JE Pistons" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/manley.webp" alt="Manley" title="Manley" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/kw.webp" alt="KW" title="KW" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/sparco.webp" alt="Sparco" title="Sparco" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/hks.webp" alt="HKS" title="HKS" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/tial.webp" alt="TiAL" title="TiAL" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/viezu.webp" alt="Viezu" title="Viezu" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/red-horse.webp" alt="Red Horse" title="Red Horse" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/arp.webp" alt="ARP" title="ARP" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/acl.webp" alt="ACL" title="ACL" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/work-wheels.webp" alt="Work Wheels" title="Work Wheels" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/diablosport.webp" alt="DiabloSport" title="DiabloSport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/link-ecu.webp" alt="Link ECU" title="Link ECU" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/mishimoto.webp" alt="Mishimoto" title="Mishimoto" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/injector-dynamics.webp" alt="Injector Dynamics" title="Injector Dynamics" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/clutch-masters.webp" alt="Clutch Masters" title="Clutch Masters" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/tilton.webp" alt="Tilton" title="Tilton" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/zestino.webp" alt="Zestino Tyres" title="Zestino Tyres" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/cusco.webp" alt="Cusco" title="Cusco" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/cartech.webp" alt="CarTech" title="CarTech" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/megan-racing.webp" alt="Megan Racing" title="Megan Racing" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/hp-tuners.webp" alt="HP Tuners" title="HP Tuners" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/milltek.webp" alt="Milltek Sport" title="Milltek Sport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/earls.webp" alt="Earl's" title="Earl's" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/dbilas.webp" alt="Dbilas" title="Dbilas" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/autometer.webp" alt="AutoMeter" title="AutoMeter" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/samco.webp" alt="Samco Sport" title="Samco Sport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/d2-racing.webp" alt="D2 Racing" title="D2 Racing" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/ferrea.webp" alt="Ferrea" title="Ferrea" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/ngk.webp" alt="NGK" title="NGK" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/racechip.webp" alt="RaceChip" title="RaceChip" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/brian-crower.webp" alt="Brian Crower" title="Brian Crower" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/sytec.webp" alt="Sytec Motorsport" title="Sytec Motorsport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/garrett.webp" alt="Garrett" title="Garrett" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/je-pistons.webp" alt="JE Pistons" title="JE Pistons" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/manley.webp" alt="Manley" title="Manley" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/kw.webp" alt="KW" title="KW" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/sparco.webp" alt="Sparco" title="Sparco" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/hks.webp" alt="HKS" title="HKS" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/tial.webp" alt="TiAL" title="TiAL" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/viezu.webp" alt="Viezu" title="Viezu" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/red-horse.webp" alt="Red Horse" title="Red Horse" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/arp.webp" alt="ARP" title="ARP" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/acl.webp" alt="ACL" title="ACL" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/work-wheels.webp" alt="Work Wheels" title="Work Wheels" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/diablosport.webp" alt="DiabloSport" title="DiabloSport" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/link-ecu.webp" alt="Link ECU" title="Link ECU" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/mishimoto.webp" alt="Mishimoto" title="Mishimoto" decoding="async" width="120" height="44" /></span><span class="brand-mark"><img src="assets/brands/injector-dynamics.webp" alt="Injector Dynamics" title="Injector Dynamics" decoding="async" width="120" height="44" /></span></div></div></div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0 acc-magenta">
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">04 / Selected work</span><span class="label">RECENT BUILDS</span></div>
@@ -264,7 +277,7 @@
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0 acc-gold">
   <div class="wrap">
     <div class="panel rv">
       <p class="label label--red">From the workshop floor</p>

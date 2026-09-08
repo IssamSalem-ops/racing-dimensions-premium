@@ -70,7 +70,7 @@
 <main id="main">
 
 
-<section class="hero hero--page">
+<section class="hero hero--page acc-orange">
   <div class="hero-bg" aria-hidden="true">
     <div class="hero-glow" id="heroGlow"></div>
     <div class="hero-grid"></div>
@@ -84,7 +84,7 @@
   </div>
 </section>
 
-<section class="section">
+<section class="section" acc-orange>
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">Output</span><span class="label">A REAL RUN</span></div>
@@ -94,9 +94,21 @@
 <div class="dyno-chart rv">
   <svg viewBox="0 0 820 360" role="img" aria-label="Dyno chart: peak 404 horsepower at 6500 rpm and 328 lb-ft of torque at 6000 rpm">
     <defs>
+      <!-- Power curve heats up as revs rise: gold -> amber -> crimson -->
+      <linearGradient id="hpStroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#ffc531"/>
+        <stop offset="45%"  stop-color="#ff7a1a"/>
+        <stop offset="100%" stop-color="#ff2d55"/>
+      </linearGradient>
+      <!-- Torque runs cool: cyan -> violet -->
+      <linearGradient id="tqStroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#22d3ee"/>
+        <stop offset="100%" stop-color="#8b6bff"/>
+      </linearGradient>
       <linearGradient id="hpFade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ff2b30" stop-opacity="0.30"/>
-        <stop offset="100%" stop-color="#ff2b30" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="#ff7a1a" stop-opacity="0.42"/>
+        <stop offset="55%"  stop-color="#ff2d55" stop-opacity="0.16"/>
+        <stop offset="100%" stop-color="#8b6bff" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <line class="dyno-gridline" x1="52" y1="320.0" x2="798" y2="320.0"/>
@@ -119,7 +131,8 @@
     <path class="dyno-area" d="M 52.0 277.4 C 72.7 269.2, 134.9 245.9, 176.3 228.0 C 217.8 210.2, 259.2 189.5, 300.7 170.4 C 342.1 151.3, 383.6 131.3, 425.0 113.4 C 466.4 95.6, 518.2 75.1, 549.3 63.3 C 580.4 51.5, 590.8 45.2, 611.5 42.7 C 632.2 40.2, 652.9 42.9, 673.7 48.2 C 694.4 53.5, 715.1 64.0, 735.8 74.3 C 756.6 84.6, 787.6 104.0, 798.0 110.0 L 798.0 320.0 L 52.0 320.0 Z"/>
     <path class="dyno-curve dyno-curve--tq" d="M 52.0 209.5 C 72.7 201.5, 134.9 175.7, 176.3 161.4 C 217.8 147.2, 259.2 133.5, 300.7 123.7 C 342.1 113.9, 383.6 107.2, 425.0 102.4 C 466.4 97.6, 518.2 96.0, 549.3 94.9 C 580.4 93.7, 590.8 92.0, 611.5 95.6 C 632.2 99.1, 652.9 107.5, 673.7 116.1 C 694.4 124.8, 715.1 136.7, 735.8 147.7 C 756.6 158.7, 787.6 176.3, 798.0 182.0" data-draw/>
     <path class="dyno-curve dyno-curve--hp" d="M 52.0 277.4 C 72.7 269.2, 134.9 245.9, 176.3 228.0 C 217.8 210.2, 259.2 189.5, 300.7 170.4 C 342.1 151.3, 383.6 131.3, 425.0 113.4 C 466.4 95.6, 518.2 75.1, 549.3 63.3 C 580.4 51.5, 590.8 45.2, 611.5 42.7 C 632.2 40.2, 652.9 42.9, 673.7 48.2 C 694.4 53.5, 715.1 64.0, 735.8 74.3 C 756.6 84.6, 787.6 104.0, 798.0 110.0" data-draw/>
-    <circle cx="611.5" cy="42.7" r="4.5" fill="#ff2b30"/>
+    <circle cx="611.5" cy="42.7" r="5" fill="#ff2d55"/>
+    <circle cx="611.5" cy="42.7" r="11" fill="none" stroke="#ff2d55" stroke-opacity="0.35"/>
     <text class="dyno-tick" x="621.5" y="32.7" fill="#f4f6f8">404 HP @ 6,500</text>
   </svg>
   <div class="dyno-legend">
@@ -128,15 +141,15 @@
     <span class="dyno-key dyno-key--note">Sample run · 2.0T · after custom map</span>
   </div>
   <div class="dyno-readout">
-    <div><span class="label">Peak power</span><b data-count="404">0</b></div>
-    <div><span class="label">Peak torque</span><b data-count="328">0</b></div>
-    <div><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
+    <div class="acc-orange"><span class="label">Peak power</span><b data-count="404">0</b></div>
+    <div class="acc-cyan"><span class="label">Peak torque</span><b data-count="328">0</b></div>
+    <div class="acc-lime"><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
   </div>
 </div>
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-gold>
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">Process</span><span class="label">HOW A SESSION RUNS</span></div>
@@ -148,7 +161,7 @@
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-lime>
   <div class="wrap split">
     <div class="rv">
       <p class="label label--red">What it costs</p>
@@ -165,7 +178,7 @@
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-cyan>
   <div class="wrap">
     <div class="chapter rv">
     <div class="chapter-top"><span class="chapter-num">Questions</span><span class="label">BEFORE YOU BOOK</span></div>

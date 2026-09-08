@@ -1,4 +1,5 @@
-import { readdir, mkdir, rm, cp, writeFile } from "node:fs/promises";
+import { readdir, mkdir, rm, cp, writeFile, readFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SITE, NAV } from "./src/layout.mjs";
@@ -22,10 +23,21 @@ await mkdir(DIST, { recursive: true });
 // 1. static assets -> dist
 await cp(join(ROOT, "static"), DIST, { recursive: true });
 
-// 2. render pages
+// 2. content-hash the CSS/JS so every deploy busts caches automatically.
+//    (A hardcoded ?v=1 meant an updated app.js was never picked up by
+//     browsers that had already cached it.)
+const hash = async f => createHash("sha1").update(await readFile(join(DIST, f))).digest("hex").slice(0, 8);
+const cssV = await hash("styles.css");
+const jsV  = await hash("app.js");
+console.log(`  asset hashes: styles.css=${cssV} app.js=${jsV}`);
+
+// 3. render pages
 let total = 0;
 for (const [mod, out] of PAGES) {
-  const { default: html } = await import(`./src/pages/${mod}?t=${Date.now()}`);
+  let { default: html } = await import(`./src/pages/${mod}?t=${Date.now()}`);
+  html = html
+    .replace(/styles\.css\?v=[^"']*/g, `styles.css?v=${cssV}`)
+    .replace(/app\.js\?v=[^"']*/g, `app.js?v=${jsV}`);
   await writeFile(join(DIST, out), html, "utf8");
   total += html.length;
   console.log(`  ${out.padEnd(16)} ${(html.length / 1024).toFixed(1)} KB`);

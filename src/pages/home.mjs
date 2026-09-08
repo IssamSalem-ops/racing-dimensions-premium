@@ -110,7 +110,7 @@ const body = `
         <a class="tlink mt-m" href="builds.html">Every build ${ICON.arrow}</a>`
     })}
     <div class="builds rv">
-      <article class="build build--wide">
+      <article class="build build--wide" data-spin>
         ${buildArt("turbo")}
         <span class="build-tag">Forced induction</span>
         <h3>Garrett G-Series conversion</h3>
@@ -122,7 +122,7 @@ const body = `
         <h3>Forged 2.0T bottom end</h3>
         <div class="build-spec"><span>Rods <b>Manley</b></span><span>Bolts <b>ARP</b></span></div>
       </article>
-      <article class="build">
+      <article class="build" data-pulse>
         ${buildArt("ecu")}
         <span class="build-tag">Engine management</span>
         <h3>Link ECU standalone</h3>

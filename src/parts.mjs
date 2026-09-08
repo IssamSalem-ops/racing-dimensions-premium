@@ -13,64 +13,106 @@ function smooth(pts) {
   return d;
 }
 
-/* ---------- Dyno chart: real HP / torque curves ---------- */
-export function dynoChart() {
-  const W = 820, H = 360, L = 52, R = 22, T = 18, B = 40;
-  const rpm = [2000, 3000, 4000, 5000, 6000, 6500, 7000, 7500, 8000];
-  const hp  = [ 62,  134,  218,  301,  374,  404,  396,  358,  306];
-  const tq  = [161,  231,  286,  317,  328,  327,  297,  251,  201];
-  const maxY = 440, minX = 2000, maxX = 8000;
-  const px = r => L + ((r - minX) / (maxX - minX)) * (W - L - R);
-  const py = v => H - B - (v / maxY) * (H - T - B);
+/* ---------- Interactive dyno chart ----------
+   Four tune stages of real-shaped curves. Paths are pre-smoothed here and
+   embedded as data so app.js can morph between stages and scrub a live
+   readout without duplicating the maths. ------------------------------- */
+const GEO = { W: 820, H: 360, L: 54, R: 24, T: 18, B: 40, minX: 2000, maxX: 8000, maxY: 520 };
+const RPM = [2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000];
 
-  const hpPts = rpm.map((r, i) => [px(r), py(hp[i])]);
-  const tqPts = rpm.map((r, i) => [px(r), py(tq[i])]);
+const STAGES = {
+  stock:  { label: "Stock",
+    hp: [ 45, 72,101,133,166,199,229,256,277,291,285,259,221],
+    tq: [118,151,177,200,218,232,241,245,242,235,214,181,145] },
+  s1: { label: "Stage 1",
+    hp: [ 55, 88,124,163,203,243,280,312,335,340,331,302,258],
+    tq: [144,185,217,245,267,284,294,298,293,275,248,211,169] },
+  s2: { label: "Stage 2",
+    hp: [ 62, 99,140,184,229,274,316,352,378,404,396,358,306],
+    tq: [161,208,244,276,301,320,332,336,331,327,297,251,201] },
+  s3: { label: "Stage 3",
+    hp: [ 72,115,162,213,265,317,366,408,438,468,459,415,355],
+    tq: [187,241,283,320,349,371,385,389,383,378,344,291,233] },
+};
+
+const px = r => GEO.L + ((r - GEO.minX) / (GEO.maxX - GEO.minX)) * (GEO.W - GEO.L - GEO.R);
+const py = v => GEO.H - GEO.B - (v / GEO.maxY) * (GEO.H - GEO.T - GEO.B);
+
+function buildStage(st) {
+  const hpPts = RPM.map((r, i) => [px(r), py(st.hp[i])]);
+  const tqPts = RPM.map((r, i) => [px(r), py(st.tq[i])]);
   const hpPath = smooth(hpPts);
-  const areaPath = `${hpPath} L ${px(maxX).toFixed(1)} ${(H - B).toFixed(1)} L ${px(minX).toFixed(1)} ${(H - B).toFixed(1)} Z`;
+  const peakHp = Math.max(...st.hp), peakTq = Math.max(...st.tq);
+  return {
+    label: st.label, hp: st.hp, tq: st.tq,
+    hpPath, tqPath: smooth(tqPts),
+    areaPath: `${hpPath} L ${px(GEO.maxX).toFixed(1)} ${(GEO.H - GEO.B).toFixed(1)} L ${px(GEO.minX).toFixed(1)} ${(GEO.H - GEO.B).toFixed(1)} Z`,
+    peakHp, peakTq,
+    peakRpm: RPM[st.hp.indexOf(peakHp)],
+  };
+}
 
-  const yTicks = [0, 110, 220, 330, 440];
+export function dynoChart() {
+  const built = Object.fromEntries(Object.entries(STAGES).map(([k, v]) => [k, buildStage(v)]));
+  const stockPeak = built.stock.peakHp;
+  Object.values(built).forEach(b => { b.gain = Math.round(((b.peakHp - stockPeak) / stockPeak) * 100); });
+  const d = built.s2;
+  const data = JSON.stringify({ geo: GEO, rpm: RPM, stages: built });
+  const yTicks = [0, 130, 260, 390, 520];
+
   return `
-<div class="dyno-chart rv">
-  <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dyno chart: peak 404 horsepower at 6500 rpm and 328 lb-ft of torque at 6000 rpm">
-    <defs>
-      <!-- Power curve heats up as revs rise: gold -> amber -> crimson -->
-      <linearGradient id="hpStroke" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%"   stop-color="#ffc531"/>
-        <stop offset="45%"  stop-color="#ff7a1a"/>
-        <stop offset="100%" stop-color="#ff2d55"/>
-      </linearGradient>
-      <!-- Torque runs cool: cyan -> violet -->
-      <linearGradient id="tqStroke" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%"   stop-color="#22d3ee"/>
-        <stop offset="100%" stop-color="#8b6bff"/>
-      </linearGradient>
-      <linearGradient id="hpFade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%"   stop-color="#ff7a1a" stop-opacity="0.42"/>
-        <stop offset="55%"  stop-color="#ff2d55" stop-opacity="0.16"/>
-        <stop offset="100%" stop-color="#8b6bff" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    ${yTicks.map(v => `<line class="dyno-gridline" x1="${L}" y1="${py(v).toFixed(1)}" x2="${W - R}" y2="${py(v).toFixed(1)}"/>
-    <text class="dyno-tick" x="${L - 10}" y="${(py(v) + 3.5).toFixed(1)}" text-anchor="end">${v}</text>`).join("\n    ")}
-    ${rpm.filter((_, i) => i % 2 === 0).map(r => `<text class="dyno-tick" x="${px(r).toFixed(1)}" y="${H - B + 20}" text-anchor="middle">${r / 1000}k</text>`).join("\n    ")}
-    <line class="dyno-axis" x1="${L}" y1="${T}" x2="${L}" y2="${H - B}"/>
-    <line class="dyno-axis" x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}"/>
-    <path class="dyno-area" d="${areaPath}"/>
-    <path class="dyno-curve dyno-curve--tq" d="${smooth(tqPts)}" data-draw/>
-    <path class="dyno-curve dyno-curve--hp" d="${hpPath}" data-draw/>
-    <circle cx="${px(6500).toFixed(1)}" cy="${py(404).toFixed(1)}" r="5" fill="#ff2d55"/>
-    <circle cx="${px(6500).toFixed(1)}" cy="${py(404).toFixed(1)}" r="11" fill="none" stroke="#ff2d55" stroke-opacity="0.35"/>
-    <text class="dyno-tick" x="${(px(6500) + 10).toFixed(1)}" y="${(py(404) - 10).toFixed(1)}" fill="#f4f6f8">404 HP @ 6,500</text>
-  </svg>
+<div class="dyno rv" data-dyno='${data}'>
+  <div class="dyno-head">
+    <div class="dyno-stages" role="group" aria-label="Tune stage">
+      ${Object.entries(built).map(([k, b]) => `<button type="button" class="stage-btn${k === "s2" ? " is-on" : ""}" data-stage="${k}" aria-pressed="${k === "s2"}">${b.label}</button>`).join("")}
+    </div>
+    <p class="dyno-hint">Drag across the graph to read the run</p>
+  </div>
+
+  <div class="dyno-chart">
+    <svg viewBox="0 0 ${GEO.W} ${GEO.H}" role="img" aria-label="Interactive dyno chart: horsepower and torque against engine speed, selectable by tune stage">
+      <defs>
+        <linearGradient id="hpStroke" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ffc531"/><stop offset="45%" stop-color="#ff7a1a"/><stop offset="100%" stop-color="#ff2d55"/>
+        </linearGradient>
+        <linearGradient id="tqStroke" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#8b6bff"/>
+        </linearGradient>
+        <linearGradient id="hpFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff7a1a" stop-opacity="0.42"/>
+          <stop offset="55%" stop-color="#ff2d55" stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="#8b6bff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      ${yTicks.map(v => `<line class="dyno-gridline" x1="${GEO.L}" y1="${py(v).toFixed(1)}" x2="${GEO.W - GEO.R}" y2="${py(v).toFixed(1)}"/><text class="dyno-tick" x="${GEO.L - 10}" y="${(py(v) + 3.5).toFixed(1)}" text-anchor="end">${v}</text>`).join("\n      ")}
+      ${RPM.filter((_, i) => i % 2 === 0).map(r => `<text class="dyno-tick" x="${px(r).toFixed(1)}" y="${GEO.H - GEO.B + 20}" text-anchor="middle">${r / 1000}k</text>`).join("\n      ")}
+      <line class="dyno-axis" x1="${GEO.L}" y1="${GEO.T}" x2="${GEO.L}" y2="${GEO.H - GEO.B}"/>
+      <line class="dyno-axis" x1="${GEO.L}" y1="${GEO.H - GEO.B}" x2="${GEO.W - GEO.R}" y2="${GEO.H - GEO.B}"/>
+
+      <path class="dyno-area"                    id="dynoArea" d="${d.areaPath}"/>
+      <path class="dyno-curve dyno-curve--tq"    id="dynoTq"   d="${d.tqPath}" data-draw/>
+      <path class="dyno-curve dyno-curve--hp"    id="dynoHp"   d="${d.hpPath}" data-draw/>
+
+      <g class="dyno-cross" id="dynoCross" aria-hidden="true">
+        <line class="dyno-cross-line" id="crossLine" x1="0" y1="${GEO.T}" x2="0" y2="${GEO.H - GEO.B}"/>
+        <circle class="dyno-dot dyno-dot--hp" id="crossHp" r="5"/>
+        <circle class="dyno-dot dyno-dot--tq" id="crossTq" r="5"/>
+      </g>
+      <rect class="dyno-hit" id="dynoHit" x="${GEO.L}" y="${GEO.T}" width="${GEO.W - GEO.L - GEO.R}" height="${GEO.H - GEO.T - GEO.B}"/>
+    </svg>
+  </div>
+
   <div class="dyno-legend">
     <span class="dyno-key"><i></i> Horsepower (whp)</span>
     <span class="dyno-key dyno-key--tq"><i></i> Torque (lb-ft)</span>
-    <span class="dyno-key dyno-key--note">Sample run · 2.0T · after custom map</span>
+    <span class="dyno-key dyno-key--note" id="dynoLive">Sample run · 2.0T</span>
   </div>
+
   <div class="dyno-readout">
-    <div class="acc-orange"><span class="label">Peak power</span><b data-count="404">0</b></div>
-    <div class="acc-cyan"><span class="label">Peak torque</span><b data-count="328">0</b></div>
-    <div class="acc-lime"><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
+    <div class="acc-orange"><span class="label">Peak power</span><b id="rdHp" data-count="${d.peakHp}">0</b></div>
+    <div class="acc-cyan"><span class="label">Peak torque</span><b id="rdTq" data-count="${d.peakTq}">0</b></div>
+    <div class="acc-lime"><span class="label">Gain vs stock</span><b id="rdGain">+${d.gain}<span class="accent">%</span></b></div>
   </div>
 </div>`;
 }
@@ -138,8 +180,31 @@ export function brandMarquee() {
   <div class="marquee marquee--rev"><div class="marquee-track">${c}</div></div>`;
 }
 
+/* Discipline map — drives the brands-page filter. */
+const CATS = {
+  ecu:       ["link-ecu","hp-tuners","racechip","diablosport","viezu","ngk"],
+  boost:     ["garrett","tial","hks","milltek","dbilas"],
+  internals: ["je-pistons","manley","brian-crower","acl","arp","ferrea"],
+  fuel:      ["injector-dynamics","mishimoto","sytec","red-horse","earls","samco"],
+  chassis:   ["kw","d2-racing","cusco","megan-racing","tilton","clutch-masters"],
+  cockpit:   ["work-wheels","zestino","sparco","autometer","cartech"],
+};
+const CAT_LABELS = {
+  all: "All 34", ecu: "Engine management", boost: "Air &amp; exhaust",
+  internals: "Internals", fuel: "Fuel &amp; cooling", chassis: "Chassis &amp; drivetrain", cockpit: "Wheels &amp; cockpit",
+};
+function catsFor(slug) {
+  return Object.keys(CATS).filter(k => CATS[k].indexOf(slug) > -1).join(" ");
+}
+
+export function brandFilters() {
+  return `<div class="filters" id="brandFilters" role="group" aria-label="Filter brands by discipline">
+    ${Object.keys(CAT_LABELS).map((k, i) => `<button type="button" class="chip${i === 0 ? " is-on" : ""}" data-cat="${k}" aria-pressed="${i === 0}">${CAT_LABELS[k]}</button>`).join("")}
+  </div>`;
+}
+
 export function brandGrid() {
-  return `<div class="brand-grid">${BRANDS.map(b => `<div class="brand-cell"><img src="assets/brands/${b[1]}.webp" alt="${b[0]}" title="${b[0]}" loading="lazy" width="120" height="46" /></div>`).join("")}</div>`;
+  return `<div class="brand-grid">${BRANDS.map(b => `<div class="brand-cell" data-cat="${catsFor(b[1])}"><img src="assets/brands/${b[1]}.webp" alt="${b[0]}" title="${b[0]}" loading="lazy" width="120" height="46" /></div>`).join("")}</div>`;
 }
 
 /* ---------- Chapter head ---------- */

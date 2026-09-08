@@ -1,5 +1,5 @@
 import { page, ICON } from "../layout.mjs";
-import { brandGrid, chapter, pageHero, BRANDS } from "../parts.mjs";
+import { brandGrid, brandFilters, chapter, pageHero, BRANDS } from "../parts.mjs";
 
 const GROUPS = [
   ["Engine management","Link ECU · HP Tuners · RaceChip · DiabloSport · Viezu"],
@@ -19,16 +19,16 @@ ${pageHero({
   actions: `<a class="btn" href="contact.html">Enquire about a brand ${ICON.arrow}</a>`
 })}
 
-<section class="section" acc-violet>
+<section class="section acc-violet">
   <div class="wrap">
     ${chapter({ n: "The wall", title: "Every brand we carry",
       lede: `<h2 class="chapter-title">The people who make the parts.</h2>`,
       aside: `<p class="lede">${BRANDS.length} manufacturers across every corner of a build. If you need something we don't list, ask — we source direct.</p>` })}
   </div>
-  <div class="wrap rv">${brandGrid()}</div>
+  <div class="wrap rv">${brandFilters()}${brandGrid()}</div>
 </section>
 
-<section class="section pad-t0" acc-magenta>
+<section class="section pad-t0 acc-magenta">
   <div class="wrap">
     ${chapter({ n: "By discipline", title: "Who we reach for",
       lede: `<h2 class="chapter-title">Matched to the job.</h2>`,

@@ -17,7 +17,7 @@ ${pageHero({
   actions: `<a class="btn" href="contact.html">Visit the workshop ${ICON.arrow}</a>`
 })}
 
-<section class="section" acc-gold>
+<section class="section acc-gold">
   <div class="wrap split">
     <div class="rv">
       <p class="label label--red">The story</p>
@@ -31,7 +31,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0" acc-lime>
+<section class="section pad-t0 acc-lime">
   <div class="wrap">
     ${chapter({ n: "Principles", title: "How we work",
       lede: `<h2 class="chapter-title">Four things we don't compromise.</h2>` })}
@@ -41,7 +41,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0" acc-cyan>
+<section class="section pad-t0 acc-cyan">
   <div class="wrap">
     <div class="panel rv">
       <p class="label label--red">Where we are</p>

@@ -31,14 +31,14 @@ ${pageHero({
   actions: `<a class="btn" href="contact.html">Start your build ${ICON.arrow}</a>`
 })}
 
-<section class="section" acc-magenta>
+<section class="section acc-magenta">
   <div class="wrap">
     ${chapter({ n: "Portfolio", title: "The work",
       lede: `<h2 class="chapter-title">Street cars, race cars, and everything between.</h2>`,
       aside: `<p class="lede">Want your car featured here? Bring it in — if it makes a number worth showing, we'll put it on the wall.</p>` })}
     <div class="builds rv">
       ${BUILDS.map(b => `
-      <article class="build${b.wide ? " build--wide" : ""}">
+      <article class="build${b.wide ? " build--wide" : ""}"${b.art === "turbo" || b.art === "wheel" ? " data-spin" : ""}${b.art === "ecu" ? " data-pulse" : ""}>
         ${buildArt(b.art)}
         <span class="build-tag">${b.tag}</span>
         <h3>${b.h}</h3>
@@ -48,7 +48,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0" acc-orange>
+<section class="section pad-t0 acc-orange">
   <div class="wrap">
     ${chapter({ n: "Case study", title: "In detail",
       lede: `<h2 class="chapter-title">404 whp, and a curve you can drive.</h2>`,

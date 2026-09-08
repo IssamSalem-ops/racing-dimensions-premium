@@ -9,7 +9,7 @@ ${pageHero({
   lede: "Tell us about the car and what you want from it. We'll come back with a plan, a timeline and an honest price.",
 })}
 
-<section class="section" acc-cyan>
+<section class="section acc-cyan">
   <div class="wrap split split--top">
 
     <div class="rv">
@@ -67,7 +67,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0" acc-violet>
+<section class="section pad-t0 acc-violet">
   <div class="wrap">
     ${chapter({ n: "Find us", title: "Al Sena'a Industrial Zone",
       lede: `<h2 class="chapter-title">Come and see the workshop.</h2>`,

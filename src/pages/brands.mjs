@@ -12,13 +12,14 @@ const GROUPS = [
 
 const body = `
 ${pageHero({
+  accent: "acc-violet",
   eyebrow: "04 / Partners",
   title: "34 names worth trusting.",
   lede: "Authorised supply, genuine stock, manufacturer warranty. No grey imports and no copies — because a fake rod bolt costs an engine.",
   actions: `<a class="btn" href="contact.html">Enquire about a brand ${ICON.arrow}</a>`
 })}
 
-<section class="section">
+<section class="section" acc-violet>
   <div class="wrap">
     ${chapter({ n: "The wall", title: "Every brand we carry",
       lede: `<h2 class="chapter-title">The people who make the parts.</h2>`,
@@ -27,7 +28,7 @@ ${pageHero({
   <div class="wrap rv">${brandGrid()}</div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-magenta>
   <div class="wrap">
     ${chapter({ n: "By discipline", title: "Who we reach for",
       lede: `<h2 class="chapter-title">Matched to the job.</h2>`,

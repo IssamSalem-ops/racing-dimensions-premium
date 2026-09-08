@@ -10,13 +10,14 @@ const STEPS = [
 
 const body = `
 ${pageHero({
+  accent: "acc-orange",
   eyebrow: "02 / Dyno Center",
   title: "The rollers don't argue.",
   lede: "A professional in-house dynamometer — the only equipment that turns an opinion about your car into a number you can trust.",
   actions: `<a class="btn" href="contact.html">Book a session ${ICON.arrow}</a><a class="btn btn--ghost" href="services.html">See all services</a>`
 })}
 
-<section class="section">
+<section class="section" acc-orange>
   <div class="wrap">
     ${chapter({
       n: "Output", title: "A real run",
@@ -27,7 +28,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-gold>
   <div class="wrap">
     ${chapter({ n: "Process", title: "How a session runs",
       lede: `<h2 class="chapter-title">Four stages, one afternoon.</h2>`,
@@ -38,7 +39,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-lime>
   <div class="wrap split">
     <div class="rv">
       <p class="label label--red">What it costs</p>
@@ -55,7 +56,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-cyan>
   <div class="wrap">
     ${chapter({ n: "Questions", title: "Before you book", lede: `<h2 class="chapter-title">Good to know.</h2>` })}
     ${faq([

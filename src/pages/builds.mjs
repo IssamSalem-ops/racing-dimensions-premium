@@ -24,13 +24,14 @@ const BUILDS = [
 
 const body = `
 ${pageHero({
+  accent: "acc-magenta",
   eyebrow: "05 / Selected work",
   title: "Builds that left with proof.",
   lede: "A sample of what passes through the workshop. Every one of these ended on the rollers with a graph attached.",
   actions: `<a class="btn" href="contact.html">Start your build ${ICON.arrow}</a>`
 })}
 
-<section class="section">
+<section class="section" acc-magenta>
   <div class="wrap">
     ${chapter({ n: "Portfolio", title: "The work",
       lede: `<h2 class="chapter-title">Street cars, race cars, and everything between.</h2>`,
@@ -47,7 +48,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0" acc-orange>
   <div class="wrap">
     ${chapter({ n: "Case study", title: "In detail",
       lede: `<h2 class="chapter-title">404 whp, and a curve you can drive.</h2>`,

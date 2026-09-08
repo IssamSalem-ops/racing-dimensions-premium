@@ -38,6 +38,23 @@
   --red-bright:   #ff2b30;
   --red-deep:     #7d0c10;
 
+  /* Spectrum — burnt-titanium iridescence + thermal/telemetry mapping.
+     Every hue here exists on a real car: anodised alloy, heat-treated
+     titanium, tyre compounds, dyno heat maps. Colour as engineering. */
+  --c-red:     #ff2d55;
+  --c-orange:  #ff7a1a;
+  --c-gold:    #ffc531;
+  --c-lime:    #35e07f;
+  --c-cyan:    #22d3ee;
+  --c-violet:  #8b6bff;
+  --c-magenta: #ff4fd8;
+
+  /* Per-section accent. Sections override this; everything inherits. */
+  --accent: var(--c-red);
+
+  --grad-ti:   linear-gradient(100deg, var(--c-cyan), var(--c-violet), var(--c-magenta), var(--c-orange), var(--c-gold));
+  --grad-heat: linear-gradient(90deg, var(--c-cyan), var(--c-lime), var(--c-gold), var(--c-orange), var(--c-red));
+
   /* Hairlines — the detail that reads as expensive */
   --line:         rgba(255, 255, 255, 0.085);
   --line-2:       rgba(255, 255, 255, 0.15);
@@ -125,7 +142,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   text-transform: uppercase;
   color: var(--muted-2);
 }
-.label--red { color: var(--red-bright); }
+.label--red { color: var(--accent); }
 
 .lede {
   font-size: clamp(1.05rem, 1.5vw, 1.3rem);
@@ -134,7 +151,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   font-weight: 300;
   max-width: 62ch;
 }
-.accent { color: var(--red-bright); }
+.accent { color: var(--accent); }
 .muted  { color: var(--muted); }
 
 /* ---------- Layout ---------- */
@@ -165,7 +182,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   font-family: var(--font-display);
   font-size: var(--fs-xs);
   letter-spacing: 0.2em;
-  color: var(--red-bright);
+  color: var(--accent);
   font-weight: 500;
 }
 .chapter-title {
@@ -186,7 +203,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 }
 .skip:focus { top: 16px; }
 
-:focus-visible { outline: 2px solid var(--red-bright); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* ---------- Header ---------- */
 .hdr {
@@ -216,7 +233,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 }
 .nav a::after {
   content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0;
-  background: var(--red-bright); transition: width 0.4s var(--ease);
+  background: var(--accent); transition: width 0.4s var(--ease);
 }
 .nav a:hover { color: var(--text); }
 .nav a:hover::after, .nav a[aria-current="page"]::after { width: 100%; }
@@ -236,7 +253,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   border: 1px solid var(--line-2); position: relative; flex-shrink: 0;
   transition: border-color 0.3s, background 0.3s;
 }
-.menu-btn:hover { border-color: var(--red); background: rgba(225,20,25,0.06); }
+.menu-btn:hover { border-color: var(--red); background: color-mix(in oklab, var(--accent) 12%, transparent); }
 .menu-btn span {
   display: block; width: 18px; height: 1.5px; background: var(--text);
   transition: transform 0.4s var(--ease), opacity 0.3s;
@@ -260,7 +277,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .menu.is-open { clip-path: inset(0 0 0 0); pointer-events: auto; }
 .menu::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: radial-gradient(70% 60% at 80% 15%, rgba(225,20,25,0.14), transparent 65%);
+  background: radial-gradient(70% 60% at 80% 15%, color-mix(in oklab, var(--accent) 20%, transparent), transparent 65%);
 }
 .menu-list { list-style: none; position: relative; }
 .menu-list li { overflow: hidden; border-bottom: 1px solid var(--line); }
@@ -275,7 +292,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .menu-list a:hover { color: var(--text); }
 .menu-list a i {
   font-family: var(--font-text); font-style: normal; font-size: var(--fs-xs);
-  letter-spacing: 0.2em; color: var(--red-bright); font-weight: 500;
+  letter-spacing: 0.2em; color: var(--accent); font-weight: 500;
 }
 .menu-foot {
   margin-top: 48px; display: flex; flex-wrap: wrap; gap: 12px 40px;
@@ -315,7 +332,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   color: var(--text); padding-bottom: 6px; border-bottom: 1px solid var(--line-2);
   transition: border-color 0.35s, color 0.35s, gap 0.35s var(--ease);
 }
-.tlink:hover { border-color: var(--red-bright); color: var(--red-bright); gap: 16px; }
+.tlink:hover { border-color: var(--accent); color: var(--accent); gap: 16px; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: clamp(40px, 7vh, 90px); }
@@ -357,7 +374,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   font-size: var(--fs-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-2);
 }
 @media (min-width: 900px) { .scroll-cue { display: flex; } }
-.scroll-cue .bar { width: 1px; height: 54px; background: linear-gradient(var(--red-bright), transparent); }
+.scroll-cue .bar { width: 1px; height: 54px; background: linear-gradient(var(--accent), transparent); }
 
 /* ---------- Stat band ---------- */
 .stats { border-block: 1px solid var(--line); }
@@ -367,29 +384,41 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 @media (min-width: 860px) { .stat { border-bottom: 0; } .stat:last-child { border-right: 0; } }
 @media (max-width: 859px) { .stat:nth-child(2n) { border-right: 0; } .stat:nth-child(n+3) { border-bottom: 0; } }
 .stat-n { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 600; line-height: 1; display: flex; align-items: baseline; gap: 2px; }
-.stat-n em { font-style: normal; color: var(--red-bright); }
+.stat-n em { font-style: normal; color: var(--accent); }
 .stat-l { margin-top: 12px; font-size: var(--fs-xs); letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted-2); }
 
 /* ---------- Numbered index list (services / capabilities) ---------- */
 .index { border-top: 1px solid var(--line); }
 .index-row {
-  display: grid; grid-template-columns: auto 1fr; gap: 16px 26px; align-items: start;
+  /* Below 900px: [num] [heading] [arrow] with the description spanning under
+     the heading. An `auto 1fr` grid let the description size column 1 and
+     shoved every heading to the right. */
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 8px 16px; align-items: baseline;
   padding-block: clamp(26px, 3.4vw, 46px); border-bottom: 1px solid var(--line);
   position: relative; transition: padding-left 0.5s var(--ease);
 }
-@media (min-width: 900px) { .index-row { grid-template-columns: 90px 1.1fr 1.4fr auto; align-items: center; gap: 40px; } }
+.index-row > .index-n  { grid-column: 1; }
+.index-row > .index-h  { grid-column: 2; }
+.index-row > .index-go { grid-column: 3; }
+.index-row > .index-p  { grid-column: 2 / -1; }
+@media (min-width: 900px) {
+  .index-row { grid-template-columns: 90px 1.1fr 1.4fr auto; align-items: center; gap: 40px; }
+  .index-row > .index-p { grid-column: 3; }
+}
 .index-row::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(90deg, rgba(225,20,25,0.09), transparent 55%);
+  background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 16%, transparent), transparent 55%);
   opacity: 0; transition: opacity 0.5s var(--ease);
 }
 .index-row:hover::before { opacity: 1; }
 .index-row:hover { padding-left: 18px; }
-.index-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--red-bright); font-weight: 500; }
+.index-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--accent); font-weight: 500; }
 .index-h { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.35rem, 2.4vw, 2rem); font-weight: 600; line-height: 1.05; }
 .index-p { color: var(--muted); font-size: var(--fs-sm); font-weight: 300; max-width: 52ch; }
 .index-go { color: var(--muted-2); transition: color 0.35s, transform 0.45s var(--ease); }
-.index-row:hover .index-go { color: var(--red-bright); transform: translateX(6px); }
+.index-row:hover .index-go { color: var(--accent); transform: translateX(6px); }
 
 /* ---------- Brand wall ---------- */
 .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
@@ -418,10 +447,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 @media (min-width: 700px)  { .cards--2 { grid-template-columns: repeat(2, 1fr); } }
 .card { background: var(--bg); padding: clamp(28px, 3.4vw, 46px); position: relative; transition: background 0.5s var(--ease); }
 .card:hover { background: var(--bg-1); }
-.card-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--red-bright); }
+.card-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--accent); }
 .card h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); margin-top: 20px; }
 .card p { color: var(--muted); font-size: var(--fs-sm); font-weight: 300; margin-top: 14px; }
-.card-ico { width: 30px; height: 30px; color: var(--red-bright); margin-bottom: 22px; }
+.card-ico { width: 30px; height: 30px; color: var(--accent); margin-bottom: 22px; }
 
 /* Feature panel (elevated, with red edge) */
 .panel { background: var(--bg-1); border: 1px solid var(--line); padding: clamp(30px, 4vw, 60px); position: relative; overflow: hidden; }
@@ -434,12 +463,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .dyno-gridline { stroke: rgba(255,255,255,0.045); stroke-width: 1; }
 .dyno-tick { fill: var(--muted-2); font-family: var(--font-text); font-size: 10px; letter-spacing: 0.1em; }
 .dyno-curve { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-.dyno-curve--hp { stroke: var(--red-bright); }
+.dyno-curve--hp { stroke: var(--accent); }
 .dyno-curve--tq { stroke: #5b9dd9; stroke-dasharray: 5 4; }
 .dyno-area { fill: url(#hpFade); opacity: 0.5; }
 .dyno-legend { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
 .dyno-key { display: flex; align-items: center; gap: 9px; font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.dyno-key i { width: 16px; height: 2px; background: var(--red-bright); display: block; }
+.dyno-key i { width: 16px; height: 2px; background: var(--accent); display: block; }
 .dyno-key--tq i { background: #5b9dd9; }
 .dyno-readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 22px; }
 .dyno-readout div { background: var(--bg); padding: 20px 18px; }
@@ -458,7 +487,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .build-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,9,11,0.94) 5%, rgba(8,9,11,0.35) 60%, transparent 100%); }
 .build-art svg { width: 100%; height: 100%; opacity: 0.5; transition: transform 1.2s var(--ease), opacity 0.6s; }
 .build:hover .build-art svg { transform: scale(1.05); opacity: 0.75; }
-.build-tag { font-size: var(--fs-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--red-bright); }
+.build-tag { font-size: var(--fs-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
 .build h3 { font-size: clamp(1.3rem, 2.4vw, 2rem); margin-top: 12px; }
 .build-spec { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2); }
 .build-spec b { color: var(--text); font-weight: 600; }
@@ -479,7 +508,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 /* ---------- Accordion (FAQ) ---------- */
 .acc-item { border-bottom: 1px solid var(--line); }
 .acc-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 26px; text-align: left; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.05rem, 1.7vw, 1.35rem); font-weight: 500; transition: color 0.3s; }
-.acc-q:hover { color: var(--red-bright); }
+.acc-q:hover { color: var(--accent); }
 .acc-ico { position: relative; width: 14px; height: 14px; flex-shrink: 0; }
 .acc-ico::before, .acc-ico::after { content: ""; position: absolute; background: currentColor; transition: transform 0.4s var(--ease); }
 .acc-ico::before { top: 6px; left: 0; width: 14px; height: 1.5px; }
@@ -496,7 +525,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   padding: 12px 0; font-size: 1rem; transition: border-color 0.35s;
 }
 .field textarea { resize: vertical; min-height: 110px; }
-.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom-color: var(--red-bright); }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-bottom-color: var(--accent); }
 .field input::placeholder, .field textarea::placeholder { color: var(--muted-2); }
 .field select {
   appearance: none; cursor: pointer; padding-right: 28px;
@@ -518,16 +547,16 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 @media (min-width: 800px) { .ftr-grid { grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 40px; } }
 .ftr-col h4 { font-size: var(--fs-xs); letter-spacing: 0.2em; color: var(--muted-2); margin-bottom: 20px; font-weight: 500; }
 .ftr-col a, .ftr-col p { display: block; color: var(--muted); font-size: var(--fs-sm); margin-bottom: 12px; transition: color 0.3s; }
-.ftr-col a:hover { color: var(--red-bright); }
+.ftr-col a:hover { color: var(--accent); }
 .ftr-logo { height: 44px; width: auto; margin-bottom: 22px; }
 .ftr-bar { display: flex; flex-wrap: wrap; gap: 12px 30px; justify-content: space-between; padding-block: 30px; border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--muted-2); letter-spacing: 0.06em; }
 .socials { display: flex; gap: 10px; }
 .socials a { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); transition: all 0.35s var(--ease); }
-.socials a:hover { border-color: var(--red); color: var(--text); background: rgba(225,20,25,0.1); }
+.socials a:hover { border-color: var(--red); color: var(--text); background: color-mix(in oklab, var(--accent) 18%, transparent); }
 .socials svg { width: 17px; height: 17px; }
 
 /* ---------- Scroll progress ---------- */
-.prog { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 200; background: var(--red-bright); transform: scaleX(0); transform-origin: 0 50%; will-change: transform; }
+.prog { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 200; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; will-change: transform; }
 
 /* ---------- Reveal motion ---------- */
 .rv { opacity: 0; transform: translateY(28px); transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out); }
@@ -610,3 +639,175 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   .brand img { height: 30px; }
   .menu-btn { width: 42px; height: 42px; }
 }
+
+/* ==========================================================================
+   COLOUR SYSTEM
+   The palette is motorsport-derived, not decorative: burnt-titanium
+   iridescence (cyan -> violet -> magenta -> amber) and thermal/telemetry
+   mapping (cold cyan -> hot red). Each section owns a hue; components
+   inherit it through --accent, so scrolling moves through a spectrum.
+   ========================================================================== */
+
+/* ---- Section accent classes ---- */
+.acc-red     { --accent: var(--c-red); }
+.acc-orange  { --accent: var(--c-orange); }
+.acc-gold    { --accent: var(--c-gold); }
+.acc-lime    { --accent: var(--c-lime); }
+.acc-cyan    { --accent: var(--c-cyan); }
+.acc-violet  { --accent: var(--c-violet); }
+.acc-magenta { --accent: var(--c-magenta); }
+
+/* ---- Iridescent gradient text (hero + major moments) ---- */
+.grad-text {
+  background: var(--grad-ti);
+  background-size: 320% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 14s linear infinite;
+}
+@keyframes shimmer { to { background-position: 320% 0; } }
+
+/* ---- Hero: full-spectrum lighting instead of a single red wash ---- */
+.hero-glow {
+  background:
+    radial-gradient(38% 36% at 74% 22%, color-mix(in oklab, var(--c-magenta) 34%, transparent), transparent 66%),
+    radial-gradient(34% 34% at 88% 44%, color-mix(in oklab, var(--c-orange) 30%, transparent), transparent 66%),
+    radial-gradient(42% 40% at 16% 68%, color-mix(in oklab, var(--c-cyan) 24%, transparent), transparent 68%),
+    radial-gradient(34% 32% at 40% 88%, color-mix(in oklab, var(--c-violet) 26%, transparent), transparent 66%);
+}
+
+/* ---- Spectrum scroll progress ---- */
+.prog { background: var(--grad-heat); }
+
+/* ---- Coloured tick under every chapter head ---- */
+.chapter-top { position: relative; }
+.chapter-top::after {
+  content: ""; position: absolute; left: 0; bottom: -1px;
+  width: clamp(80px, 12vw, 190px); height: 2px; background: var(--accent);
+}
+
+/* ---- Stat band: each figure its own hue ---- */
+.stats-grid .stat:nth-child(1) { --accent: var(--c-gold); }
+.stats-grid .stat:nth-child(2) { --accent: var(--c-cyan); }
+.stats-grid .stat:nth-child(3) { --accent: var(--c-lime); }
+.stats-grid .stat:nth-child(4) { --accent: var(--c-magenta); }
+.stat-n { color: var(--accent); }
+.stat-n em { color: var(--text); }
+
+/* ---- Index rows cycle the spectrum ---- */
+.index-row:nth-child(7n+1) { --accent: var(--c-red); }
+.index-row:nth-child(7n+2) { --accent: var(--c-orange); }
+.index-row:nth-child(7n+3) { --accent: var(--c-gold); }
+.index-row:nth-child(7n+4) { --accent: var(--c-lime); }
+.index-row:nth-child(7n+5) { --accent: var(--c-cyan); }
+.index-row:nth-child(7n+6) { --accent: var(--c-violet); }
+.index-row:nth-child(7n+7) { --accent: var(--c-magenta); }
+.index-row:hover .index-h { color: var(--accent); }
+.index-h { transition: color 0.35s var(--ease); }
+
+/* ---- Cards cycle too ---- */
+.cards .card:nth-child(7n+1) { --accent: var(--c-red); }
+.cards .card:nth-child(7n+2) { --accent: var(--c-orange); }
+.cards .card:nth-child(7n+3) { --accent: var(--c-gold); }
+.cards .card:nth-child(7n+4) { --accent: var(--c-lime); }
+.cards .card:nth-child(7n+5) { --accent: var(--c-cyan); }
+.cards .card:nth-child(7n+6) { --accent: var(--c-violet); }
+.cards .card:nth-child(7n+7) { --accent: var(--c-magenta); }
+.card { border-top: 2px solid transparent; transition: background 0.5s var(--ease), border-color 0.4s var(--ease); }
+.card:hover { border-top-color: var(--accent); }
+.card:hover h3 { color: var(--accent); }
+.card h3 { transition: color 0.35s var(--ease); }
+
+/* ---- Build tiles: each a different hue, with a coloured wash ---- */
+.builds .build:nth-child(6n+1) { --accent: var(--c-orange); }
+.builds .build:nth-child(6n+2) { --accent: var(--c-cyan); }
+.builds .build:nth-child(6n+3) { --accent: var(--c-violet); }
+.builds .build:nth-child(6n+4) { --accent: var(--c-lime); }
+.builds .build:nth-child(6n+5) { --accent: var(--c-magenta); }
+.builds .build:nth-child(6n+6) { --accent: var(--c-gold); }
+.build-art svg { color: var(--accent); }
+.build-art::after {
+  background:
+    linear-gradient(to top, rgba(8,9,11,0.95) 4%, rgba(8,9,11,0.4) 58%, transparent 100%),
+    radial-gradient(70% 60% at 50% 40%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%);
+}
+.build h3 { transition: color 0.4s var(--ease); }
+.build:hover h3 { color: var(--accent); }
+
+/* ---- Price rows + FAQ cycle ---- */
+.price-row:nth-child(odd)  { --accent: var(--c-gold); }
+.price-row:nth-child(even) { --accent: var(--c-cyan); }
+.price-v { color: var(--accent); }
+.acc-item:nth-child(5n+1) { --accent: var(--c-red); }
+.acc-item:nth-child(5n+2) { --accent: var(--c-orange); }
+.acc-item:nth-child(5n+3) { --accent: var(--c-lime); }
+.acc-item:nth-child(5n+4) { --accent: var(--c-cyan); }
+.acc-item:nth-child(5n+5) { --accent: var(--c-violet); }
+
+/* ---- Overlay menu: rainbow index ---- */
+.menu-list li:nth-child(7n+1) { --accent: var(--c-red); }
+.menu-list li:nth-child(7n+2) { --accent: var(--c-orange); }
+.menu-list li:nth-child(7n+3) { --accent: var(--c-gold); }
+.menu-list li:nth-child(7n+4) { --accent: var(--c-lime); }
+.menu-list li:nth-child(7n+5) { --accent: var(--c-cyan); }
+.menu-list li:nth-child(7n+6) { --accent: var(--c-violet); }
+.menu-list li:nth-child(7n+7) { --accent: var(--c-magenta); }
+.menu-list a i { color: var(--accent); }
+.menu-list a:hover { color: var(--accent); }
+.menu::before {
+  background:
+    radial-gradient(50% 46% at 82% 14%, color-mix(in oklab, var(--c-magenta) 22%, transparent), transparent 66%),
+    radial-gradient(46% 42% at 10% 82%, color-mix(in oklab, var(--c-cyan) 18%, transparent), transparent 68%);
+}
+
+/* ---- Primary button: energy gradient ---- */
+.btn:not(.btn--ghost) {
+  background: linear-gradient(100deg, var(--c-red), var(--c-orange));
+  border-color: transparent;
+}
+.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+.btn--ghost::before { display: none; }
+
+/* ---- Brand wall: colour on hover ---- */
+.brand-mark img { transition: opacity 0.4s var(--ease), filter 0.4s var(--ease); }
+.brand-mark:nth-child(7n+1) { --accent: var(--c-red); }
+.brand-mark:nth-child(7n+2) { --accent: var(--c-orange); }
+.brand-mark:nth-child(7n+3) { --accent: var(--c-gold); }
+.brand-mark:nth-child(7n+4) { --accent: var(--c-lime); }
+.brand-mark:nth-child(7n+5) { --accent: var(--c-cyan); }
+.brand-mark:nth-child(7n+6) { --accent: var(--c-violet); }
+.brand-mark:nth-child(7n+7) { --accent: var(--c-magenta); }
+.brand-mark:hover img { filter: drop-shadow(0 0 14px var(--accent)); }
+.brand-cell:nth-child(7n+1) { --accent: var(--c-red); }
+.brand-cell:nth-child(7n+2) { --accent: var(--c-orange); }
+.brand-cell:nth-child(7n+3) { --accent: var(--c-gold); }
+.brand-cell:nth-child(7n+4) { --accent: var(--c-lime); }
+.brand-cell:nth-child(7n+5) { --accent: var(--c-cyan); }
+.brand-cell:nth-child(7n+6) { --accent: var(--c-violet); }
+.brand-cell:nth-child(7n+7) { --accent: var(--c-magenta); }
+.brand-cell:hover { background: color-mix(in oklab, var(--accent) 10%, var(--bg-1)); }
+.brand-cell:hover img { filter: drop-shadow(0 0 12px var(--accent)); }
+
+/* ---- Panels + footer ---- */
+.panel::before { background: var(--grad-ti); }
+.ftr-cta h2 .accent, .pull-quote { color: var(--text); }
+.socials a:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, transparent); }
+.socials a:nth-child(1) { --accent: var(--c-magenta); }
+.socials a:nth-child(2) { --accent: var(--c-red); }
+.socials a:nth-child(3) { --accent: var(--c-cyan); }
+.socials a:nth-child(4) { --accent: var(--c-violet); }
+
+/* ---- Nav underline picks up the spectrum ---- */
+.nav a::after { background: var(--grad-heat); }
+
+@media (prefers-reduced-motion: reduce) { .grad-text { animation: none; } }
+
+/* ---- Dyno chart: thermal telemetry ---- */
+.dyno-curve--hp { stroke: url(#hpStroke); stroke-width: 3; }
+.dyno-curve--tq { stroke: url(#tqStroke); stroke-width: 2.5; }
+.dyno-key i { background: linear-gradient(90deg, var(--c-gold), var(--c-red)); }
+.dyno-key--tq i { background: linear-gradient(90deg, var(--c-cyan), var(--c-violet)); }
+.dyno-readout b { color: var(--accent); }
+.dyno-readout div { border-top: 2px solid var(--accent); }

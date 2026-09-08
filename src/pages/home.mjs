@@ -30,7 +30,7 @@ const body = `
     <p class="label label--red rv">Tuning Parts &amp; Dyno Center · Amman, Jordan</p>
     <h1 class="hero-title display">
       <span class="ln"><span>We build</span></span>
-      <span class="ln"><span class="accent">power.</span></span>
+      <span class="ln"><span class="grad-text">power.</span></span>
     </h1>
     <div class="hero-meta">
       <p class="hero-sub">Since ${SITE.since}, Jordan's performance workshop for people who want numbers, not claims. Parts sourced from the world's best. Power proven on our own dyno.</p>
@@ -54,7 +54,7 @@ const body = `
   </div>
 </section>
 
-<section class="section">
+<section class="section acc-cyan">
   <div class="wrap">
     ${chapter({
       n: "01 / Capabilities",
@@ -74,7 +74,7 @@ const body = `
   </div>
 </section>
 
-<section class="section section--panel">
+<section class="section section--panel acc-orange">
   <div class="wrap">
     ${chapter({
       n: "02 / Dyno Center",
@@ -87,7 +87,7 @@ const body = `
   </div>
 </section>
 
-<section class="section">
+<section class="section acc-violet">
   <div class="wrap">
     ${chapter({
       n: "03 / Partners",
@@ -100,7 +100,7 @@ const body = `
   <div class="mt-l">${brandMarquee()}</div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0 acc-magenta">
   <div class="wrap">
     ${chapter({
       n: "04 / Selected work",
@@ -132,7 +132,7 @@ const body = `
   </div>
 </section>
 
-<section class="section pad-t0">
+<section class="section pad-t0 acc-gold">
   <div class="wrap">
     <div class="panel rv">
       <p class="label label--red">From the workshop floor</p>

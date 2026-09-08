@@ -33,9 +33,21 @@ export function dynoChart() {
 <div class="dyno-chart rv">
   <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Dyno chart: peak 404 horsepower at 6500 rpm and 328 lb-ft of torque at 6000 rpm">
     <defs>
+      <!-- Power curve heats up as revs rise: gold -> amber -> crimson -->
+      <linearGradient id="hpStroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#ffc531"/>
+        <stop offset="45%"  stop-color="#ff7a1a"/>
+        <stop offset="100%" stop-color="#ff2d55"/>
+      </linearGradient>
+      <!-- Torque runs cool: cyan -> violet -->
+      <linearGradient id="tqStroke" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#22d3ee"/>
+        <stop offset="100%" stop-color="#8b6bff"/>
+      </linearGradient>
       <linearGradient id="hpFade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ff2b30" stop-opacity="0.30"/>
-        <stop offset="100%" stop-color="#ff2b30" stop-opacity="0"/>
+        <stop offset="0%"   stop-color="#ff7a1a" stop-opacity="0.42"/>
+        <stop offset="55%"  stop-color="#ff2d55" stop-opacity="0.16"/>
+        <stop offset="100%" stop-color="#8b6bff" stop-opacity="0"/>
       </linearGradient>
     </defs>
     ${yTicks.map(v => `<line class="dyno-gridline" x1="${L}" y1="${py(v).toFixed(1)}" x2="${W - R}" y2="${py(v).toFixed(1)}"/>
@@ -46,7 +58,8 @@ export function dynoChart() {
     <path class="dyno-area" d="${areaPath}"/>
     <path class="dyno-curve dyno-curve--tq" d="${smooth(tqPts)}" data-draw/>
     <path class="dyno-curve dyno-curve--hp" d="${hpPath}" data-draw/>
-    <circle cx="${px(6500).toFixed(1)}" cy="${py(404).toFixed(1)}" r="4.5" fill="#ff2b30"/>
+    <circle cx="${px(6500).toFixed(1)}" cy="${py(404).toFixed(1)}" r="5" fill="#ff2d55"/>
+    <circle cx="${px(6500).toFixed(1)}" cy="${py(404).toFixed(1)}" r="11" fill="none" stroke="#ff2d55" stroke-opacity="0.35"/>
     <text class="dyno-tick" x="${(px(6500) + 10).toFixed(1)}" y="${(py(404) - 10).toFixed(1)}" fill="#f4f6f8">404 HP @ 6,500</text>
   </svg>
   <div class="dyno-legend">
@@ -55,9 +68,9 @@ export function dynoChart() {
     <span class="dyno-key dyno-key--note">Sample run · 2.0T · after custom map</span>
   </div>
   <div class="dyno-readout">
-    <div><span class="label">Peak power</span><b data-count="404">0</b></div>
-    <div><span class="label">Peak torque</span><b data-count="328">0</b></div>
-    <div><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
+    <div class="acc-orange"><span class="label">Peak power</span><b data-count="404">0</b></div>
+    <div class="acc-cyan"><span class="label">Peak torque</span><b data-count="328">0</b></div>
+    <div class="acc-lime"><span class="label">Gain vs stock</span><b>+38<span class="accent">%</span></b></div>
   </div>
 </div>`;
 }
@@ -151,9 +164,9 @@ export function faq(items) {
 export { ICON };
 
 /* ---------- Interior page hero ---------- */
-export function pageHero({ eyebrow, title, lede, actions = "" }) {
+export function pageHero({ eyebrow, title, lede, actions = "", accent = "acc-red" }) {
   return `
-<section class="hero hero--page">
+<section class="hero hero--page ${accent}">
   <div class="hero-bg" aria-hidden="true">
     <div class="hero-glow" id="heroGlow"></div>
     <div class="hero-grid"></div>

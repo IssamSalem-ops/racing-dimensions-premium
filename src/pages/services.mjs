@@ -16,14 +16,14 @@ const CATEGORIES = ["Brake Pads","Exhaust System","Fuel System","Cooling System"
 
 const body = `
 ${pageHero({
-  accent: "acc-lime",
+  accent: "acc-brand",
   eyebrow: "03 / Services",
   title: "From a single part to a whole engine.",
   lede: "Two decades of doing one thing: making cars in Jordan faster, safer and more reliable than they left the factory.",
   actions: `<a class="btn" href="contact.html">Talk to the team ${ICON.arrow}</a>`
 })}
 
-<section class="section acc-lime">
+<section class="section acc-heat">
   <div class="wrap">
     ${chapter({ n: "Capability", title: "The full list",
       lede: `<h2 class="chapter-title">What we take on.</h2>`,
@@ -38,7 +38,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0 acc-cyan">
+<section class="section pad-t0 acc-brand">
   <div class="wrap">
     ${chapter({ n: "Catalogue", title: "Parts categories",
       lede: `<h2 class="chapter-title">Twenty categories, stocked and sourced.</h2>`,
@@ -50,7 +50,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0 acc-violet">
+<section class="section pad-t0 acc-heat">
   <div class="wrap">
     <div class="builds rv">
       <article class="build">${buildArt("spring")}<span class="build-tag">Chassis</span><h3>Suspension &amp; geometry</h3></article>

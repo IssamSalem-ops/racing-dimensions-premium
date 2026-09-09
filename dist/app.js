@@ -141,7 +141,7 @@
       if (hh === 24) hh = 0;
       var open = wd !== "Fri" && hh >= 9 && hh < 19;
       badge.textContent = open ? "· Open now" : "· Closed";
-      badge.style.color = open ? "#3ddc84" : "var(--muted-2)";
+      badge.style.color = open ? "var(--c-ok)" : "var(--muted-2)";
     } catch (e) {}
   }
 

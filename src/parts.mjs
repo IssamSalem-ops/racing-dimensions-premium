@@ -72,16 +72,14 @@ export function dynoChart() {
   <div class="dyno-chart">
     <svg viewBox="0 0 ${GEO.W} ${GEO.H}" role="img" aria-label="Interactive dyno chart: horsepower and torque against engine speed, selectable by tune stage">
       <defs>
+        <!-- Power heats along the run: amber -> crimson. Both in-palette. -->
         <linearGradient id="hpStroke" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#ffc531"/><stop offset="45%" stop-color="#ff7a1a"/><stop offset="100%" stop-color="#ff2d55"/>
-        </linearGradient>
-        <linearGradient id="tqStroke" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#8b6bff"/>
+          <stop offset="0%" stop-color="#ff7a1a"/><stop offset="100%" stop-color="#ff2d55"/>
         </linearGradient>
         <linearGradient id="hpFade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ff7a1a" stop-opacity="0.42"/>
-          <stop offset="55%" stop-color="#ff2d55" stop-opacity="0.16"/>
-          <stop offset="100%" stop-color="#8b6bff" stop-opacity="0"/>
+          <stop offset="0%" stop-color="#ff7a1a" stop-opacity="0.34"/>
+          <stop offset="60%" stop-color="#ff2d55" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#ff2d55" stop-opacity="0"/>
         </linearGradient>
       </defs>
 
@@ -110,9 +108,9 @@ export function dynoChart() {
   </div>
 
   <div class="dyno-readout">
-    <div class="acc-orange"><span class="label">Peak power</span><b id="rdHp" data-count="${d.peakHp}">0</b></div>
-    <div class="acc-cyan"><span class="label">Peak torque</span><b id="rdTq" data-count="${d.peakTq}">0</b></div>
-    <div class="acc-lime"><span class="label">Gain vs stock</span><b id="rdGain">+${d.gain}<span class="accent">%</span></b></div>
+    <div class="acc-heat"><span class="label">Peak power</span><b id="rdHp" data-count="${d.peakHp}">0</b></div>
+    <div class="acc-data"><span class="label">Peak torque</span><b id="rdTq" data-count="${d.peakTq}">0</b></div>
+    <div class="acc-brand"><span class="label">Gain vs stock</span><b id="rdGain">+${d.gain}<span class="accent">%</span></b></div>
   </div>
 </div>`;
 }
@@ -229,7 +227,7 @@ export function faq(items) {
 export { ICON };
 
 /* ---------- Interior page hero ---------- */
-export function pageHero({ eyebrow, title, lede, actions = "", accent = "acc-red" }) {
+export function pageHero({ eyebrow, title, lede, actions = "", accent = "acc-brand" }) {
   return `
 <section class="hero hero--page ${accent}">
   <div class="hero-bg" aria-hidden="true">

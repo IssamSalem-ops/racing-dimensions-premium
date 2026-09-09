@@ -10,14 +10,14 @@ const VALUES = [
 
 const body = `
 ${pageHero({
-  accent: "acc-gold",
+  accent: "acc-brand",
   eyebrow: "06 / About",
   title: "Two decades in Al Sena'a.",
   lede: `Racing Dimensions has served motorsport competitors, car tuners and motorcycle enthusiasts from Amman since ${SITE.since}.`,
   actions: `<a class="btn" href="contact.html">Visit the workshop ${ICON.arrow}</a>`
 })}
 
-<section class="section acc-gold">
+<section class="section acc-heat">
   <div class="wrap split">
     <div class="rv">
       <p class="label label--red">The story</p>
@@ -31,7 +31,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0 acc-lime">
+<section class="section pad-t0 acc-brand">
   <div class="wrap">
     ${chapter({ n: "Principles", title: "How we work",
       lede: `<h2 class="chapter-title">Four things we don't compromise.</h2>` })}
@@ -41,7 +41,7 @@ ${pageHero({
   </div>
 </section>
 
-<section class="section pad-t0 acc-cyan">
+<section class="section pad-t0 acc-heat">
   <div class="wrap">
     <div class="panel rv">
       <p class="label label--red">Where we are</p>

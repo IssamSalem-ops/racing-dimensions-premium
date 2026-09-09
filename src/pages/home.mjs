@@ -54,7 +54,7 @@ const body = `
   </div>
 </section>
 
-<section class="section acc-cyan">
+<section class="section acc-brand">
   <div class="wrap">
     ${chapter({
       n: "01 / Capabilities",
@@ -74,7 +74,7 @@ const body = `
   </div>
 </section>
 
-<section class="section section--panel acc-orange">
+<section class="section section--panel acc-heat">
   <div class="wrap">
     ${chapter({
       n: "02 / Dyno Center",
@@ -87,7 +87,7 @@ const body = `
   </div>
 </section>
 
-<section class="section acc-violet">
+<section class="section acc-brand">
   <div class="wrap">
     ${chapter({
       n: "03 / Partners",
@@ -100,7 +100,7 @@ const body = `
   <div class="mt-l">${brandMarquee()}</div>
 </section>
 
-<section class="section pad-t0 acc-magenta">
+<section class="section pad-t0 acc-heat">
   <div class="wrap">
     ${chapter({
       n: "04 / Selected work",
@@ -132,7 +132,7 @@ const body = `
   </div>
 </section>
 
-<section class="section pad-t0 acc-gold">
+<section class="section pad-t0 acc-brand">
   <div class="wrap">
     <div class="panel rv">
       <p class="label label--red">From the workshop floor</p>

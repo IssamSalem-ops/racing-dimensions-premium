@@ -34,26 +34,17 @@
   --muted-2:      #6a717b;
 
   /* Brand */
-  --red:          #e11419;
-  --red-bright:   #ff2b30;
+  /* Legacy names kept so older rules keep working — they alias the palette
+     so there is exactly ONE crimson in the system. */
+  --red:          var(--c-brand);
+  --red-bright:   var(--c-brand);
   --red-deep:     #7d0c10;
 
   /* Spectrum — burnt-titanium iridescence + thermal/telemetry mapping.
      Every hue here exists on a real car: anodised alloy, heat-treated
      titanium, tyre compounds, dyno heat maps. Colour as engineering. */
-  --c-red:     #ff2d55;
-  --c-orange:  #ff7a1a;
-  --c-gold:    #ffc531;
-  --c-lime:    #35e07f;
-  --c-cyan:    #22d3ee;
-  --c-violet:  #8b6bff;
-  --c-magenta: #ff4fd8;
-
-  /* Per-section accent. Sections override this; everything inherits. */
-  --accent: var(--c-red);
-
-  --grad-ti:   linear-gradient(100deg, var(--c-cyan), var(--c-violet), var(--c-magenta), var(--c-orange), var(--c-gold));
-  --grad-heat: linear-gradient(90deg, var(--c-cyan), var(--c-lime), var(--c-gold), var(--c-orange), var(--c-red));
+  /* Palette + rules live in the COLOUR SYSTEM block near the end of
+     this file. Do not add hues here. */
 
   /* Hairlines — the detail that reads as expensive */
   --line:         rgba(255, 255, 255, 0.085);
@@ -464,12 +455,10 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .dyno-tick { fill: var(--muted-2); font-family: var(--font-text); font-size: 10px; letter-spacing: 0.1em; }
 .dyno-curve { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 .dyno-curve--hp { stroke: var(--accent); }
-.dyno-curve--tq { stroke: #5b9dd9; stroke-dasharray: 5 4; }
 .dyno-area { fill: url(#hpFade); opacity: 0.5; }
 .dyno-legend { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
 .dyno-key { display: flex; align-items: center; gap: 9px; font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 .dyno-key i { width: 16px; height: 2px; background: var(--accent); display: block; }
-.dyno-key--tq i { background: #5b9dd9; }
 .dyno-readout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 22px; }
 .dyno-readout div { background: var(--bg); padding: 20px 18px; }
 .dyno-readout b { font-family: var(--font-display); font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 600; display: block; line-height: 1; }
@@ -537,7 +526,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 @media (min-width: 640px) { .field-row { grid-template-columns: 1fr 1fr; } }
 .hp { position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
 .form-note { font-size: var(--fs-sm); color: var(--muted); min-height: 1.4em; margin-top: 16px; }
-.form-note.is-ok { color: #3ddc84; }
+.form-note.is-ok { color: var(--c-ok); }
 
 /* ---------- Footer ---------- */
 .ftr { border-top: 1px solid var(--line); padding-top: clamp(60px, 8vw, 110px); position: relative; overflow: hidden; }
@@ -641,174 +630,112 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 }
 
 /* ==========================================================================
-   COLOUR SYSTEM
-   The palette is motorsport-derived, not decorative: burnt-titanium
-   iridescence (cyan -> violet -> magenta -> amber) and thermal/telemetry
-   mapping (cold cyan -> hot red). Each section owns a hue; components
-   inherit it through --accent, so scrolling moves through a spectrum.
+   COLOUR SYSTEM — three roles, and rules about where each one goes.
+   Neutrals carry ~90% of the page. Colour is a signal, not decoration.
+
+     BRAND  crimson  identity: primary CTA, current page, key accents
+     HEAT   amber    energy: power, stages, "hot" data. Pairs with brand.
+     DATA   cyan     measurement ONLY (torque curve, cool counterpoint).
+                     Never used decoratively.
+     OK     green    status ONLY (open / closed badge).
+
+   Rule: one accent per SECTION, never per element. Sections alternate
+   brand <-> heat, which sit next to each other on the wheel, so the whole
+   page reads as one family instead of a rainbow.
    ========================================================================== */
 
-/* ---- Section accent classes ---- */
-.acc-red     { --accent: var(--c-red); }
-.acc-orange  { --accent: var(--c-orange); }
-.acc-gold    { --accent: var(--c-gold); }
-.acc-lime    { --accent: var(--c-lime); }
-.acc-cyan    { --accent: var(--c-cyan); }
-.acc-violet  { --accent: var(--c-violet); }
-.acc-magenta { --accent: var(--c-magenta); }
+:root {
+  --c-brand: #ff2d55;
+  --c-heat:  #ff7a1a;
+  --c-data:  #22d3ee;
+  --c-ok:    #35e07f;
 
-/* ---- Iridescent gradient text (hero + major moments) ---- */
-.grad-text {
-  background: var(--grad-ti);
-  background-size: 320% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  animation: shimmer 14s linear infinite;
+  --accent: var(--c-brand);
+
+  /* The only gradient in the system. */
+  --grad-heat: linear-gradient(100deg, var(--c-brand), var(--c-heat));
+  --grad-ti:   var(--grad-heat);
 }
-@keyframes shimmer { to { background-position: 320% 0; } }
 
-/* ---- Hero: full-spectrum lighting instead of a single red wash ---- */
+.acc-brand { --accent: var(--c-brand); }
+.acc-heat  { --accent: var(--c-heat); }
+.acc-data  { --accent: var(--c-data); }
+
+/* ---- Gradient text: brand -> heat only ---- */
+.grad-text {
+  background: var(--grad-heat);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: shimmer 12s ease-in-out infinite alternate;
+}
+@keyframes shimmer { to { background-position: 220% 0; } }
+
+/* ---- Hero lighting: two warm sources, nothing else ---- */
 .hero-glow {
   background:
-    radial-gradient(38% 36% at 74% 22%, color-mix(in oklab, var(--c-magenta) 34%, transparent), transparent 66%),
-    radial-gradient(34% 34% at 88% 44%, color-mix(in oklab, var(--c-orange) 30%, transparent), transparent 66%),
-    radial-gradient(42% 40% at 16% 68%, color-mix(in oklab, var(--c-cyan) 24%, transparent), transparent 68%),
-    radial-gradient(34% 32% at 40% 88%, color-mix(in oklab, var(--c-violet) 26%, transparent), transparent 66%);
+    radial-gradient(42% 40% at 76% 24%, color-mix(in oklab, var(--c-brand) 30%, transparent), transparent 66%),
+    radial-gradient(36% 36% at 92% 52%, color-mix(in oklab, var(--c-heat) 24%, transparent), transparent 68%);
+}
+.menu::before {
+  background: radial-gradient(52% 48% at 84% 14%, color-mix(in oklab, var(--c-brand) 18%, transparent), transparent 68%);
 }
 
-/* ---- Spectrum scroll progress ---- */
 .prog { background: var(--grad-heat); }
+.nav a::after { background: var(--accent); }
 
-/* ---- Coloured tick under every chapter head ---- */
+/* ---- Chapter tick ---- */
 .chapter-top { position: relative; }
 .chapter-top::after {
   content: ""; position: absolute; left: 0; bottom: -1px;
   width: clamp(80px, 12vw, 190px); height: 2px; background: var(--accent);
 }
 
-/* ---- Stat band: each figure its own hue ---- */
-.stats-grid .stat:nth-child(1) { --accent: var(--c-gold); }
-.stats-grid .stat:nth-child(2) { --accent: var(--c-cyan); }
-.stats-grid .stat:nth-child(3) { --accent: var(--c-lime); }
-.stats-grid .stat:nth-child(4) { --accent: var(--c-magenta); }
-.stat-n { color: var(--accent); }
-.stat-n em { color: var(--text); }
+/* ---- Stat band: numerals stay neutral, only the unit is coloured ---- */
+.stat-n { color: var(--text); }
+.stat-n em { color: var(--c-heat); }
 
-/* ---- Index rows cycle the spectrum ---- */
-.index-row:nth-child(7n+1) { --accent: var(--c-red); }
-.index-row:nth-child(7n+2) { --accent: var(--c-orange); }
-.index-row:nth-child(7n+3) { --accent: var(--c-gold); }
-.index-row:nth-child(7n+4) { --accent: var(--c-lime); }
-.index-row:nth-child(7n+5) { --accent: var(--c-cyan); }
-.index-row:nth-child(7n+6) { --accent: var(--c-violet); }
-.index-row:nth-child(7n+7) { --accent: var(--c-magenta); }
+/* ---- Everything below inherits its SECTION accent. No per-item hues. ---- */
 .index-row:hover .index-h { color: var(--accent); }
 .index-h { transition: color 0.35s var(--ease); }
 
-/* ---- Cards cycle too ---- */
-.cards .card:nth-child(7n+1) { --accent: var(--c-red); }
-.cards .card:nth-child(7n+2) { --accent: var(--c-orange); }
-.cards .card:nth-child(7n+3) { --accent: var(--c-gold); }
-.cards .card:nth-child(7n+4) { --accent: var(--c-lime); }
-.cards .card:nth-child(7n+5) { --accent: var(--c-cyan); }
-.cards .card:nth-child(7n+6) { --accent: var(--c-violet); }
-.cards .card:nth-child(7n+7) { --accent: var(--c-magenta); }
 .card { border-top: 2px solid transparent; transition: background 0.5s var(--ease), border-color 0.4s var(--ease); }
 .card:hover { border-top-color: var(--accent); }
 .card:hover h3 { color: var(--accent); }
 .card h3 { transition: color 0.35s var(--ease); }
 
-/* ---- Build tiles: each a different hue, with a coloured wash ---- */
-.builds .build:nth-child(6n+1) { --accent: var(--c-orange); }
-.builds .build:nth-child(6n+2) { --accent: var(--c-cyan); }
-.builds .build:nth-child(6n+3) { --accent: var(--c-violet); }
-.builds .build:nth-child(6n+4) { --accent: var(--c-lime); }
-.builds .build:nth-child(6n+5) { --accent: var(--c-magenta); }
-.builds .build:nth-child(6n+6) { --accent: var(--c-gold); }
 .build-art svg { color: var(--accent); }
 .build-art::after {
   background:
-    linear-gradient(to top, rgba(8,9,11,0.95) 4%, rgba(8,9,11,0.4) 58%, transparent 100%),
-    radial-gradient(70% 60% at 50% 40%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%);
+    linear-gradient(to top, rgba(8,9,11,0.95) 4%, rgba(8,9,11,0.42) 58%, transparent 100%),
+    radial-gradient(70% 60% at 50% 40%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 70%);
 }
 .build h3 { transition: color 0.4s var(--ease); }
 .build:hover h3 { color: var(--accent); }
 
-/* ---- Price rows + FAQ cycle ---- */
-.price-row:nth-child(odd)  { --accent: var(--c-gold); }
-.price-row:nth-child(even) { --accent: var(--c-cyan); }
 .price-v { color: var(--accent); }
-.acc-item:nth-child(5n+1) { --accent: var(--c-red); }
-.acc-item:nth-child(5n+2) { --accent: var(--c-orange); }
-.acc-item:nth-child(5n+3) { --accent: var(--c-lime); }
-.acc-item:nth-child(5n+4) { --accent: var(--c-cyan); }
-.acc-item:nth-child(5n+5) { --accent: var(--c-violet); }
 
-/* ---- Overlay menu: rainbow index ---- */
-.menu-list li:nth-child(7n+1) { --accent: var(--c-red); }
-.menu-list li:nth-child(7n+2) { --accent: var(--c-orange); }
-.menu-list li:nth-child(7n+3) { --accent: var(--c-gold); }
-.menu-list li:nth-child(7n+4) { --accent: var(--c-lime); }
-.menu-list li:nth-child(7n+5) { --accent: var(--c-cyan); }
-.menu-list li:nth-child(7n+6) { --accent: var(--c-violet); }
-.menu-list li:nth-child(7n+7) { --accent: var(--c-magenta); }
 .menu-list a i { color: var(--accent); }
 .menu-list a:hover { color: var(--accent); }
-.menu::before {
-  background:
-    radial-gradient(50% 46% at 82% 14%, color-mix(in oklab, var(--c-magenta) 22%, transparent), transparent 66%),
-    radial-gradient(46% 42% at 10% 82%, color-mix(in oklab, var(--c-cyan) 18%, transparent), transparent 68%);
-}
 
-/* ---- Primary button: energy gradient ---- */
-.btn:not(.btn--ghost) {
-  background: linear-gradient(100deg, var(--c-red), var(--c-orange));
-  border-color: transparent;
-}
+.btn:not(.btn--ghost) { background: var(--grad-heat); border-color: transparent; }
 .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
 .btn--ghost::before { display: none; }
 
-/* ---- Brand wall: colour on hover ---- */
 .brand-mark img { transition: opacity 0.4s var(--ease), filter 0.4s var(--ease); }
-.brand-mark:nth-child(7n+1) { --accent: var(--c-red); }
-.brand-mark:nth-child(7n+2) { --accent: var(--c-orange); }
-.brand-mark:nth-child(7n+3) { --accent: var(--c-gold); }
-.brand-mark:nth-child(7n+4) { --accent: var(--c-lime); }
-.brand-mark:nth-child(7n+5) { --accent: var(--c-cyan); }
-.brand-mark:nth-child(7n+6) { --accent: var(--c-violet); }
-.brand-mark:nth-child(7n+7) { --accent: var(--c-magenta); }
-.brand-mark:hover img { filter: drop-shadow(0 0 14px var(--accent)); }
-.brand-cell:nth-child(7n+1) { --accent: var(--c-red); }
-.brand-cell:nth-child(7n+2) { --accent: var(--c-orange); }
-.brand-cell:nth-child(7n+3) { --accent: var(--c-gold); }
-.brand-cell:nth-child(7n+4) { --accent: var(--c-lime); }
-.brand-cell:nth-child(7n+5) { --accent: var(--c-cyan); }
-.brand-cell:nth-child(7n+6) { --accent: var(--c-violet); }
-.brand-cell:nth-child(7n+7) { --accent: var(--c-magenta); }
-.brand-cell:hover { background: color-mix(in oklab, var(--accent) 10%, var(--bg-1)); }
-.brand-cell:hover img { filter: drop-shadow(0 0 12px var(--accent)); }
+.brand-mark:hover img { filter: drop-shadow(0 0 12px var(--c-brand)); }
+.brand-cell:hover { background: color-mix(in oklab, var(--accent) 8%, var(--bg-1)); }
+.brand-cell:hover img { filter: drop-shadow(0 0 10px var(--accent)); }
 
-/* ---- Panels + footer ---- */
-.panel::before { background: var(--grad-ti); }
-.ftr-cta h2 .accent, .pull-quote { color: var(--text); }
-.socials a:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, transparent); }
-.socials a:nth-child(1) { --accent: var(--c-magenta); }
-.socials a:nth-child(2) { --accent: var(--c-red); }
-.socials a:nth-child(3) { --accent: var(--c-cyan); }
-.socials a:nth-child(4) { --accent: var(--c-violet); }
-
-/* ---- Nav underline picks up the spectrum ---- */
-.nav a::after { background: var(--grad-heat); }
-
-@media (prefers-reduced-motion: reduce) { .grad-text { animation: none; } }
+.panel::before { background: var(--grad-heat); }
+.pull-quote { color: var(--text); }
+.socials a:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, transparent); }
 
 /* ---- Dyno chart: thermal telemetry ---- */
 .dyno-curve--hp { stroke: url(#hpStroke); stroke-width: 3; }
-.dyno-curve--tq { stroke: url(#tqStroke); stroke-width: 2.5; }
-.dyno-key i { background: linear-gradient(90deg, var(--c-gold), var(--c-red)); }
-.dyno-key--tq i { background: linear-gradient(90deg, var(--c-cyan), var(--c-violet)); }
+.dyno-curve--tq { stroke: var(--c-data); stroke-width: 2.5; }
+.dyno-key i { background: var(--grad-heat); }
+.dyno-key--tq i { background: var(--c-data); }
 .dyno-readout b { color: var(--accent); }
 .dyno-readout div { border-top: 2px solid var(--accent); }
 
@@ -829,15 +756,15 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .stage-btn:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); }
 .stage-btn.is-on {
   color: var(--bg); border-color: transparent;
-  background: linear-gradient(100deg, var(--c-red), var(--c-orange));
+  background: var(--grad-heat);
 }
 .dyno-hint { font-size: var(--fs-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); }
 .dyno-hit { fill: transparent; cursor: crosshair; touch-action: none; }
 .dyno-cross { opacity: 0; transition: opacity 0.25s var(--ease); }
 .dyno.is-scrubbing .dyno-cross { opacity: 1; }
 .dyno-cross-line { stroke: var(--text); stroke-opacity: 0.35; stroke-width: 1; stroke-dasharray: 3 4; }
-.dyno-dot--hp { fill: #ff7a1a; stroke: #08090b; stroke-width: 2; }
-.dyno-dot--tq { fill: #22d3ee; stroke: #08090b; stroke-width: 2; }
+.dyno-dot--hp { fill: var(--c-heat); stroke: #08090b; stroke-width: 2; }
+.dyno-dot--tq { fill: var(--c-data); stroke: #08090b; stroke-width: 2; }
 .dyno-curve { transition: d 0.7s var(--ease); }
 .dyno-area  { transition: d 0.7s var(--ease); }
 #dynoLive { font-variant-numeric: tabular-nums; }

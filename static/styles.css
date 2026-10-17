@@ -232,8 +232,9 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   transform: scaleX(0); transform-origin: left;   /* scaleX, not width: no layout per frame */
   transition: transform 0.4s var(--ease);
 }
-.nav a:hover { color: var(--text); }
-.nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
+@media (hover: hover) and (pointer: fine) { .nav a:hover { color: var(--text); } }
+.nav a[aria-current="page"]::after { transform: scaleX(1); }
+@media (hover: hover) and (pointer: fine) { .nav a:hover::after { transform: scaleX(1); } }
 .nav a[aria-current="page"] { color: var(--text); }
 
 .hdr-cta { display: flex; align-items: center; gap: 14px; }
@@ -241,7 +242,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   display: none; font-size: var(--fs-xs); letter-spacing: 0.1em; color: var(--muted);
   transition: color 0.3s;
 }
-.hdr-phone:hover { color: var(--text); }
+@media (hover: hover) and (pointer: fine) { .hdr-phone:hover { color: var(--text); } }
 @media (min-width: 780px) { .hdr-phone { display: block; } }
 
 /* Menu button — always available, primary nav on mobile */
@@ -251,7 +252,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   transition: border-color 0.3s, background 0.3s, scale 160ms var(--ease-out);
 }
 .menu-btn:active { scale: 0.97; }
-.menu-btn:hover { border-color: var(--red); background: color-mix(in oklab, var(--accent) 12%, transparent); }
+@media (hover: hover) and (pointer: fine) { .menu-btn:hover { border-color: var(--red); background: color-mix(in oklab, var(--accent) 12%, transparent); } }
 .menu-btn span {
   display: block; width: 18px; height: 1.5px; background: var(--text);
   transition: transform 0.4s var(--ease), opacity 0.3s;
@@ -297,7 +298,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .menu.is-open .menu-list li:nth-child(5) a { transition-delay: 0s, 160ms; }
 .menu.is-open .menu-list li:nth-child(6) a { transition-delay: 0s, 200ms; }
 .menu.is-open .menu-list li:nth-child(7) a { transition-delay: 0s, 240ms; }
-.menu-list a:hover { color: var(--text); }
+@media (hover: hover) and (pointer: fine) { .menu-list a:hover { color: var(--text); } }
 .menu-list a i {
   font-family: var(--font-text); font-style: normal; font-size: var(--fs-xs);
   letter-spacing: 0.2em; color: var(--accent); font-weight: 500;
@@ -314,7 +315,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   padding: 17px 32px; position: relative; overflow: hidden;
   font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
   background: var(--btn-bg); color: #fff; border: 1px solid var(--btn-bg);
-  transition: color 0.4s var(--ease), border-color 0.4s var(--ease),
+  /* Colour runs at the fill's 250ms so the text flips as the fill passes it. */
+  transition: color 250ms var(--ease), border-color 250ms var(--ease),
               translate 200ms var(--ease-out), scale 160ms var(--ease-out);
   isolation: isolate;
 }
@@ -324,12 +326,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .btn::before {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background: var(--text); transform: translateY(101%);
-  transition: transform 0.5s var(--ease-out);
+  transition: transform 250ms var(--ease-out);
 }
-.btn:hover { color: var(--bg); border-color: var(--text); }
-.btn:hover::before { transform: translateY(0); }
+@media (hover: hover) and (pointer: fine) { .btn:hover { color: var(--bg); border-color: var(--text); } }
+@media (hover: hover) and (pointer: fine) { .btn:hover::before { transform: translateY(0); } }
 .btn--ghost { --btn-bg: transparent; color: var(--text); border-color: var(--line-2); }
-.btn--ghost:hover { color: var(--bg); border-color: var(--text); }
+@media (hover: hover) and (pointer: fine) { .btn--ghost:hover { color: var(--bg); border-color: var(--text); } }
 .btn svg { width: 15px; height: 15px; flex: none; }
 
 /* Every inline icon needs an explicit box: an unsized <svg> either collapses
@@ -345,9 +347,9 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   transition: border-color 0.35s, color 0.35s;
 }
 .tlink svg { transition: transform 0.35s var(--ease); }
-.tlink:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .tlink:hover { border-color: var(--accent); color: var(--accent); } }
 /* Move the arrow, not the gap: animating `gap` re-runs layout every frame. */
-.tlink:hover svg { transform: translateX(6px); }
+@media (hover: hover) and (pointer: fine) { .tlink:hover svg { transform: translateX(6px); } }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: clamp(40px, 7vh, 90px); }
@@ -427,38 +429,40 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   background: linear-gradient(90deg, color-mix(in oklab, var(--accent) 16%, transparent), transparent 55%);
   opacity: 0; transition: opacity 0.5s var(--ease);
 }
-.index-row:hover::before { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .index-row:hover::before { opacity: 1; } }
 /* Shift the content, not the row's padding: padding re-lays out the list
    every frame. The arrow (.index-go) keeps its own smaller nudge. */
 .index-n, .index-p { transition: transform 0.5s var(--ease); }
-.index-row:hover > .index-n,
-.index-row:hover > .index-h,
-.index-row:hover > .index-p { transform: translateX(18px); }
+@media (hover: hover) and (pointer: fine) {
+  .index-row:hover > .index-n,
+  .index-row:hover > .index-h,
+  .index-row:hover > .index-p { transform: translateX(18px); }
+}
 .index-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--accent); font-weight: 500; }
 .index-h { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.35rem, 2.4vw, 2rem); font-weight: 600; line-height: 1.05; }
 .index-p { color: var(--muted); font-size: var(--fs-sm); font-weight: 300; max-width: 52ch; }
 .index-go { color: var(--muted-2); transition: color 0.35s, transform 0.45s var(--ease); }
-.index-row:hover .index-go { color: var(--accent); transform: translateX(6px); }
+@media (hover: hover) and (pointer: fine) { .index-row:hover .index-go { color: var(--accent); transform: translateX(6px); } }
 
 /* ---------- Brand wall ---------- */
 .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
 .marquee-track { display: flex; align-items: center; gap: clamp(40px, 4.5vw, 76px); width: max-content; animation: slide 64s linear infinite; }
 .marquee--rev .marquee-track { animation-direction: reverse; animation-duration: 78s; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) { .marquee:hover .marquee-track { animation-play-state: paused; } }
 @keyframes slide { to { transform: translateX(-50%); } }
 .brand-mark { flex-shrink: 0; height: 44px; display: grid; place-items: center; }
 .brand-mark img { height: 100%; width: auto; object-fit: contain; opacity: 0.6; transition: opacity 0.4s var(--ease); }
-.marquee:hover .brand-mark img { opacity: 0.42; }
-.brand-mark:hover img { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .marquee:hover .brand-mark img { opacity: 0.42; } }
+@media (hover: hover) and (pointer: fine) { .brand-mark:hover img { opacity: 1; } }
 
 /* Static brand grid (brands page) */
 .brand-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
 @media (min-width: 640px) { .brand-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 1000px) { .brand-grid { grid-template-columns: repeat(5, 1fr); } }
 .brand-cell { aspect-ratio: 16 / 10; display: grid; place-items: center; padding: 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; transition: background 0.4s; }
-.brand-cell:hover { background: var(--bg-1); }
+@media (hover: hover) and (pointer: fine) { .brand-cell:hover { background: var(--bg-1); } }
 .brand-cell img { max-height: 46px; width: auto; opacity: 0.5; transition: opacity 0.4s var(--ease); }
-.brand-cell:hover img { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .brand-cell:hover img { opacity: 1; } }
 
 /* ---------- Cards ---------- */
 .cards { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
@@ -466,7 +470,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 @media (min-width: 1040px) { .cards--3 { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 700px)  { .cards--2 { grid-template-columns: repeat(2, 1fr); } }
 .card { background: var(--bg); padding: clamp(28px, 3.4vw, 46px); position: relative; transition: background 0.5s var(--ease); }
-.card:hover { background: var(--bg-1); }
+@media (hover: hover) and (pointer: fine) { .card:hover { background: var(--bg-1); } }
 .card-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--accent); }
 .card h3 { font-size: clamp(1.25rem, 2vw, 1.6rem); margin-top: 20px; }
 .card p { color: var(--muted); font-size: var(--fs-sm); font-weight: 300; margin-top: 14px; }
@@ -504,7 +508,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .build-art { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .build-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,9,11,0.94) 5%, rgba(8,9,11,0.35) 60%, transparent 100%); }
 .build-art svg { width: 100%; height: 100%; opacity: 0.5; transition: transform 1.2s var(--ease), opacity 0.6s; }
-.build:hover .build-art svg { transform: scale(1.05); opacity: 0.75; }
+@media (hover: hover) and (pointer: fine) { .build:hover .build-art svg { transform: scale(1.05); opacity: 0.75; } }
 .build-tag { font-size: var(--fs-xs); letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
 .build h3 { font-size: clamp(1.3rem, 2.4vw, 2rem); margin-top: 12px; }
 .build-spec { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; font-size: var(--fs-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted-2); }
@@ -526,7 +530,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 /* ---------- Accordion (FAQ) ---------- */
 .acc-item { border-bottom: 1px solid var(--line); }
 .acc-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 26px; text-align: left; font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.05rem, 1.7vw, 1.35rem); font-weight: 500; transition: color 0.3s; }
-.acc-q:hover { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .acc-q:hover { color: var(--accent); } }
 .acc-ico { position: relative; width: 14px; height: 14px; flex-shrink: 0; }
 .acc-ico::before, .acc-ico::after { content: ""; position: absolute; background: currentColor; transition: transform 0.4s var(--ease); }
 .acc-ico::before { top: 6px; left: 0; width: 14px; height: 1.5px; }
@@ -574,12 +578,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 @media (min-width: 800px) { .ftr-grid { grid-template-columns: 1.6fr 1fr 1fr 1.2fr; gap: 40px; } }
 .ftr-col h4 { font-size: var(--fs-xs); letter-spacing: 0.2em; color: var(--muted-2); margin-bottom: 20px; font-weight: 500; }
 .ftr-col a, .ftr-col p { display: block; color: var(--muted); font-size: var(--fs-sm); margin-bottom: 12px; transition: color 0.3s; }
-.ftr-col a:hover { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .ftr-col a:hover { color: var(--accent); } }
 .ftr-logo { height: 44px; width: auto; margin-bottom: 22px; }
 .ftr-bar { display: flex; flex-wrap: wrap; gap: 12px 30px; justify-content: space-between; padding-block: 30px; border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--muted-2); letter-spacing: 0.06em; }
 .socials { display: flex; gap: 10px; }
 .socials a { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); transition: border-color 0.35s var(--ease), color 0.35s var(--ease), background 0.35s var(--ease); }
-.socials a:hover { border-color: var(--red); color: var(--text); background: color-mix(in oklab, var(--accent) 18%, transparent); }
+@media (hover: hover) and (pointer: fine) { .socials a:hover { border-color: var(--red); color: var(--text); background: color-mix(in oklab, var(--accent) 18%, transparent); } }
 .socials svg { width: 17px; height: 17px; }
 
 /* ---------- Scroll progress ---------- */
@@ -734,12 +738,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .stat-n em { color: var(--c-heat); }
 
 /* ---- Everything below inherits its SECTION accent. No per-item hues. ---- */
-.index-row:hover .index-h { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .index-row:hover .index-h { color: var(--accent); } }
 .index-h { transition: color 0.35s var(--ease), transform 0.5s var(--ease); }
 
 .card { border-top: 2px solid transparent; transition: background 0.5s var(--ease), border-color 0.4s var(--ease); }
-.card:hover { border-top-color: var(--accent); }
-.card:hover h3 { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .card:hover { border-top-color: var(--accent); } }
+@media (hover: hover) and (pointer: fine) { .card:hover h3 { color: var(--accent); } }
 .card h3 { transition: color 0.35s var(--ease); }
 
 .build-art svg { color: var(--accent); }
@@ -749,25 +753,25 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
     radial-gradient(70% 60% at 50% 40%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 70%);
 }
 .build h3 { transition: color 0.4s var(--ease); }
-.build:hover h3 { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .build:hover h3 { color: var(--accent); } }
 
 .price-v { color: var(--accent); }
 
 .menu-list a i { color: var(--accent); }
-.menu-list a:hover { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .menu-list a:hover { color: var(--accent); } }
 
 .btn:not(.btn--ghost) { background: var(--grad-heat); border-color: transparent; }
-.btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .btn--ghost:hover { border-color: var(--accent); color: var(--accent); } }
 .btn--ghost::before { display: none; }
 
 .brand-mark img { transition: opacity 0.4s var(--ease), filter 0.4s var(--ease); }
-.brand-mark:hover img { filter: drop-shadow(0 0 12px var(--c-brand)); }
-.brand-cell:hover { background: color-mix(in oklab, var(--accent) 8%, var(--bg-1)); }
-.brand-cell:hover img { filter: drop-shadow(0 0 10px var(--accent)); }
+@media (hover: hover) and (pointer: fine) { .brand-mark:hover img { filter: drop-shadow(0 0 12px var(--c-brand)); } }
+@media (hover: hover) and (pointer: fine) { .brand-cell:hover { background: color-mix(in oklab, var(--accent) 8%, var(--bg-1)); } }
+@media (hover: hover) and (pointer: fine) { .brand-cell:hover img { filter: drop-shadow(0 0 10px var(--accent)); } }
 
 .panel::before { background: var(--grad-heat); }
 .pull-quote { color: var(--text); }
-.socials a:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, transparent); }
+@media (hover: hover) and (pointer: fine) { .socials a:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, transparent); } }
 
 /* ---- Dyno chart: thermal telemetry ---- */
 .dyno-curve--hp { stroke: url(#hpStroke); stroke-width: 3; }
@@ -793,7 +797,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
     translate 200ms var(--ease-out), scale 160ms var(--ease-out);
 }
 .stage-btn:active { scale: 0.97; }
-.stage-btn:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); }
+@media (hover: hover) and (pointer: fine) { .stage-btn:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); } }
 .stage-btn.is-on {
   color: var(--bg); border-color: transparent;
   background: var(--grad-heat);
@@ -805,8 +809,6 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .dyno-cross-line { stroke: var(--text); stroke-opacity: 0.35; stroke-width: 1; stroke-dasharray: 3 4; }
 .dyno-dot--hp { fill: var(--c-heat); stroke: #08090b; stroke-width: 2; }
 .dyno-dot--tq { fill: var(--c-data); stroke: #08090b; stroke-width: 2; }
-.dyno-curve { transition: d 0.7s var(--ease); }
-.dyno-area  { transition: d 0.7s var(--ease); }
 #dynoLive { font-variant-numeric: tabular-nums; }
 
 /* ---- Word-stagger heading reveal ---- */
@@ -840,9 +842,9 @@ body.has-cursor a, body.has-cursor button, body.has-cursor .dyno-hit { cursor: n
               translate 200ms var(--ease-out), scale 160ms var(--ease-out);
 }
 .chip:active { scale: 0.97; }
-.chip:hover { color: var(--text); border-color: var(--accent); }
+@media (hover: hover) and (pointer: fine) { .chip:hover { color: var(--text); border-color: var(--accent); } }
 .chip.is-on { color: var(--bg); background: var(--accent); border-color: transparent; }
-.brand-cell { transition: background 0.4s, opacity 0.45s var(--ease), transform 0.45s var(--ease); }
+.brand-cell { transition: background 0.4s, opacity 0.45s var(--ease), transform 0.45s var(--ease), filter 0.45s var(--ease); }
 .brand-cell.is-hidden { opacity: 0.12; transform: scale(0.9); pointer-events: none; filter: grayscale(1); }
 
 /* ---- Animated blueprint art ---- */
@@ -864,5 +866,4 @@ body.has-cursor a, body.has-cursor button, body.has-cursor .dyno-hit { cursor: n
   body.has-cursor { cursor: auto; }
   .build[data-spin] .build-art svg > g,
   .build[data-pulse] .build-art svg > g { animation: none; }
-  .dyno-curve, .dyno-area { transition: none; }
 }

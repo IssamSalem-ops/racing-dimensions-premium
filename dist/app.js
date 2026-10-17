@@ -64,6 +64,7 @@
   function animate(el) {
     var target = parseInt(el.getAttribute("data-count"), 10);
     if (isNaN(target)) return;
+    if (el.__countRaf) cancelAnimationFrame(el.__countRaf);   // shared with the dyno's countTo
     if (reduce) { el.textContent = target; return; }
     var plain = el.hasAttribute("data-plain");
     var start = plain ? target - 22 : 0, t0 = null, dur = 1500;
@@ -72,7 +73,7 @@
       var p = Math.min((ts - t0) / dur, 1);
       var eased = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(start + (target - start) * eased);
-      if (p < 1) requestAnimationFrame(step); else el.textContent = target;
+      if (p < 1) el.__countRaf = requestAnimationFrame(step); else { el.textContent = target; el.__countRaf = 0; }
     })(performance.now());
   }
   function countIn(scope) {
@@ -104,19 +105,23 @@
   /* ---- Hero intro + parallax ---- */
   var hero = $("#hero") || $(".hero");
   if (hero) requestAnimationFrame(function () { hero.classList.add("is-ready"); });
+  /* Glow eases toward the pointer (and back to centre on leave) instead of
+     tracking it 1:1. The loop only runs while the glow is still moving. */
   var glow = $("#heroGlow");
   if (glow && fine && !reduce && hero) {
-    var gx = 0, gy = 0, gRaf = false;
+    var gx = 0, gy = 0, cx = 0, cy = 0, gRaf = 0;
+    function glowStep() {
+      cx += (gx - cx) * 0.1; cy += (gy - cy) * 0.1;
+      if (Math.abs(gx - cx) < 0.05 && Math.abs(gy - cy) < 0.05) { cx = gx; cy = gy; gRaf = 0; }
+      else gRaf = requestAnimationFrame(glowStep);
+      glow.style.transform = "translate3d(" + cx.toFixed(2) + "px," + cy.toFixed(2) + "px,0)";
+    }
+    function glowTo(x, y) { gx = x; gy = y; if (!gRaf) gRaf = requestAnimationFrame(glowStep); }
     hero.addEventListener("pointermove", function (e) {
       var r = hero.getBoundingClientRect();
-      gx = ((e.clientX - r.left) / r.width - 0.5) * 44;
-      gy = ((e.clientY - r.top) / r.height - 0.5) * 30;
-      if (!gRaf) {
-        requestAnimationFrame(function () { glow.style.transform = "translate3d(" + gx + "px," + gy + "px,0)"; gRaf = false; });
-        gRaf = true;
-      }
+      glowTo(((e.clientX - r.left) / r.width - 0.5) * 44, ((e.clientY - r.top) / r.height - 0.5) * 30);
     });
-    hero.addEventListener("pointerleave", function () { glow.style.transform = ""; });
+    hero.addEventListener("pointerleave", function () { glowTo(0, 0); });
   }
 
   /* ---- Accordion ---- */
@@ -292,35 +297,65 @@
       var pxF = function (r) { return G.L + ((r - G.minX) / (G.maxX - G.minX)) * (G.W - G.L - G.R); };
       var pyF = function (v) { return G.H - G.B - (v / G.maxY) * (G.H - G.T - G.B); };
 
-      function redraw(p) {
-        if (reduce) return;
-        var len;
-        try { len = p.getTotalLength(); } catch (e) { return; }
-        p.style.transition = "none";
-        p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
-        void p.getBoundingClientRect();
-        p.style.transition = "stroke-dashoffset 1.1s cubic-bezier(0.16,1,0.3,1)";
-        requestAnimationFrame(function () { p.style.strokeDashoffset = "0"; });
+      /* Same Catmull-Rom smoothing as src/parts.mjs, needed here to build
+         the in-between paths while morphing from one stage to the next. */
+      function smooth(pts) {
+        var d = "M " + pts[0][0].toFixed(1) + " " + pts[0][1].toFixed(1);
+        for (var i = 0; i < pts.length - 1; i++) {
+          var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+          d += " C " + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) +
+               ", " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) +
+               ", " + p2[0].toFixed(1) + " " + p2[1].toFixed(1);
+        }
+        return d;
+      }
+      function paths(hp, tq) {
+        var hpD = smooth(RPM.map(function (r, i) { return [pxF(r), pyF(hp[i])]; }));
+        var base = (G.H - G.B).toFixed(1);
+        pHp.setAttribute("d", hpD);
+        pTq.setAttribute("d", smooth(RPM.map(function (r, i) { return [pxF(r), pyF(tq[i])]; })));
+        pAr.setAttribute("d", hpD + " L " + pxF(G.maxX).toFixed(1) + " " + base + " L " + pxF(G.minX).toFixed(1) + " " + base + " Z");
+      }
+
+      /* Morph the curves from what's on screen to the new stage (350ms,
+         ease-in-out: it's on-screen movement). Starting from the displayed
+         values, not the previous stage, makes rapid clicks retarget smoothly
+         instead of restarting. */
+      var shown = { hp: D.stages[cur].hp.slice(), tq: D.stages[cur].tq.slice() }, morphRaf = 0;
+      function morphTo(s) {
+        if (morphRaf) cancelAnimationFrame(morphRaf);
+        // the draw-on dash was sized for the old path; drop it before the length changes
+        [pHp, pTq].forEach(function (p) { p.style.transition = "none"; p.style.strokeDasharray = ""; p.style.strokeDashoffset = ""; });
+        if (reduce) { shown = { hp: s.hp.slice(), tq: s.tq.slice() }; paths(shown.hp, shown.tq); return; }
+        var fromHp = shown.hp.slice(), fromTq = shown.tq.slice(), t0 = null, dur = 350;
+        (function step(ts) {
+          if (!t0) t0 = ts;
+          var q = Math.min((ts - t0) / dur, 1);
+          var e = q < 0.5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2;   // easeInOutCubic
+          shown.hp = fromHp.map(function (v, i) { return v + (s.hp[i] - v) * e; });
+          shown.tq = fromTq.map(function (v, i) { return v + (s.tq[i] - v) * e; });
+          paths(shown.hp, shown.tq);
+          morphRaf = q < 1 ? requestAnimationFrame(step) : 0;
+        })(performance.now());
       }
       function countTo(el, target) {
         if (!el) return;
+        if (el.__countRaf) cancelAnimationFrame(el.__countRaf);   // one count per element at a time
+        el.setAttribute("data-count", target);                   // so a later reveal counts to this stage
         if (reduce) { el.textContent = target; return; }
         var from = parseInt(el.textContent, 10) || 0, t0 = null, dur = 700;
         (function step(ts) {
           if (!t0) t0 = ts;
           var q = Math.min((ts - t0) / dur, 1), e2 = 1 - Math.pow(1 - q, 3);
           el.textContent = Math.round(from + (target - from) * e2);
-          if (q < 1) requestAnimationFrame(step);
+          el.__countRaf = q < 1 ? requestAnimationFrame(step) : 0;
         })(performance.now());
       }
       function setStage(key) {
         var s = D.stages[key];
         if (!s) return;
         cur = key;
-        pHp.setAttribute("d", s.hpPath);
-        pTq.setAttribute("d", s.tqPath);
-        pAr.setAttribute("d", s.areaPath);
-        redraw(pHp); redraw(pTq);
+        morphTo(s);
         countTo(rdHp, s.peakHp); countTo(rdTq, s.peakTq);
         if (rdGain) rdGain.innerHTML = "+" + s.gain + '<span class="accent">%</span>';
         $$(".stage-btn", dyno).forEach(function (b) {

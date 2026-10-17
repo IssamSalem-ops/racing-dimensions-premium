@@ -604,17 +604,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .pad-t0 { padding-top: 0; }
 
 /* ---------- Reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .rv { opacity: 1; transform: none; }
-  .hero-title .ln > span { transform: none !important; }
-  .menu-list a { transform: none !important; }
-  .marquee-track { animation: none; }
-}
+/* Reduced motion lives at the very end of the file so it overrides every
+   component rule above it. */
 
 /* ==========================================================================
    Component / utility classes
@@ -857,13 +848,63 @@ body.has-cursor a, body.has-cursor button, body.has-cursor .dyno-hit { cursor: n
 /* ---- Scroll-linked hero ---- */
 .hero-in { will-change: transform, opacity; }
 
+/* ==========================================================================
+   REDUCED MOTION
+   Fewer and gentler, not zero. Nothing moves, slides, scales up or loops;
+   opacity and colour feedback stays, shortened to 150ms with no delays.
+   Every rule below swaps a moving transition for a fade. (app.js already
+   skips magnetic buttons, cursor, parallax, glow, word splits, draw-ons,
+   count-ups and the dyno morph under this setting.)
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  .w > span { transform: none !important; }
-  .cur, .cur-dot { display: none !important; }
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) { animation: none !important; }
-  body.has-cursor { cursor: auto; }
+  html { scroll-behavior: auto; }
+
+  /* Looping / keyframe animations stop (marquee, spin, pulse, shimmer).
+     Transitions survive, but short and undelayed (kills menu + reveal stagger). */
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important; transition-delay: 0s !important;
+  }
+  .marquee-track { animation: none; }
   .build[data-spin] .build-art svg > g,
   .build[data-pulse] .build-art svg > g { animation: none; }
+
+  /* Page change: keep the crossfade (opacity only), just quicker. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: 150ms; }
+
+  /* Entrances: fade in place instead of rising / sliding up. */
+  .rv { transform: none; }
+  .w > span { transform: none !important; }
+  .hero-title .ln > span { transform: none !important; opacity: 0; transition: opacity 150ms ease !important; }
+  .hero.is-ready .hero-title .ln > span { opacity: 1; }
+
+  /* Overlay menu: crossfade instead of the clip wipe and link slide. */
+  .menu { clip-path: none; opacity: 0; transition: opacity 150ms ease !important; }
+  .menu.is-open { clip-path: none; opacity: 1; }
+  .menu-list a { transform: none !important; }
+
+  /* Hover / filter movement off. Colour and opacity changes still play.
+     (Press `scale` on buttons stays: it's 3%, not travel.) */
+  .stage-btn,
+  .tlink svg,
+  .index-n, .index-h, .index-p, .index-go,
+  .build-art svg,
+  .brand-cell { transform: none !important; }
+
+  /* Button fill and nav underline: fade in instead of sliding / growing. */
+  .btn::before { transform: none !important; opacity: 0; transition: opacity 150ms ease !important; }
+  .nav a::after { transform: none !important; opacity: 0; transition: opacity 150ms ease !important; }
+  .nav a[aria-current="page"]::after { opacity: 1; }
+
+  /* FAQ: no height animation pushing the page around; answer fades in. */
+  .acc-a { transition: none !important; }
+  .acc-a > div { opacity: 0; transition: opacity 150ms ease !important; }
+  .acc-item.is-open .acc-a > div { opacity: 1; }
+
+  .cur, .cur-dot { display: none !important; }
+  body.has-cursor { cursor: auto; }
+}
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+  .btn:hover::before, .nav a:hover::after { opacity: 1; }
 }

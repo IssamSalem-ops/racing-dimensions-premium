@@ -123,11 +123,9 @@
   $$(".acc-q").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var item = btn.closest(".acc-item");
-      var panel = document.getElementById(btn.getAttribute("aria-controls"));
       var open = !item.classList.contains("is-open");
-      item.classList.toggle("is-open", open);
+      item.classList.toggle("is-open", open);   // CSS animates the panel's grid row
       btn.setAttribute("aria-expanded", open ? "true" : "false");
-      if (panel) panel.style.maxHeight = open ? panel.scrollHeight + "px" : "0";
     });
   });
 

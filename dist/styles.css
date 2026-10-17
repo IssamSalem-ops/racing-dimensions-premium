@@ -110,9 +110,13 @@ body::after {
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.038;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Pre-rendered black/white specks with their own alpha, composited
+     normally. The old SVG turbulence + `mix-blend-mode: overlay` forced the
+     browser to re-blend the whole viewport on scroll. Opacity 0.08 was
+     measured to match the old grain's strength; raise it for more film. */
+  opacity: 0.08;
+  background-image: url("assets/img/grain.png");
+  background-size: 128px 128px;
 }
 
 /* ---------- Typography primitives ---------- */
@@ -223,11 +227,13 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   transition: color 0.3s var(--ease);
 }
 .nav a::after {
-  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 0;
-  background: var(--accent); transition: width 0.4s var(--ease);
+  content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;   /* scaleX, not width: no layout per frame */
+  transition: transform 0.4s var(--ease);
 }
 .nav a:hover { color: var(--text); }
-.nav a:hover::after, .nav a[aria-current="page"]::after { width: 100%; }
+.nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
 .nav a[aria-current="page"] { color: var(--text); }
 
 .hdr-cta { display: flex; align-items: center; gap: 14px; }
@@ -336,9 +342,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   display: inline-flex; align-items: center; gap: 10px;
   font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--text); padding-bottom: 6px; border-bottom: 1px solid var(--line-2);
-  transition: border-color 0.35s, color 0.35s, gap 0.35s var(--ease);
+  transition: border-color 0.35s, color 0.35s;
 }
-.tlink:hover { border-color: var(--accent); color: var(--accent); gap: 16px; }
+.tlink svg { transition: transform 0.35s var(--ease); }
+.tlink:hover { border-color: var(--accent); color: var(--accent); }
+/* Move the arrow, not the gap: animating `gap` re-runs layout every frame. */
+.tlink:hover svg { transform: translateX(6px); }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: hidden; padding-bottom: clamp(40px, 7vh, 90px); }
@@ -403,7 +412,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   grid-template-columns: 40px 1fr auto;
   gap: 8px 16px; align-items: baseline;
   padding-block: clamp(26px, 3.4vw, 46px); border-bottom: 1px solid var(--line);
-  position: relative; transition: padding-left 0.5s var(--ease);
+  position: relative;
 }
 .index-row > .index-n  { grid-column: 1; }
 .index-row > .index-h  { grid-column: 2; }
@@ -419,7 +428,12 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
   opacity: 0; transition: opacity 0.5s var(--ease);
 }
 .index-row:hover::before { opacity: 1; }
-.index-row:hover { padding-left: 18px; }
+/* Shift the content, not the row's padding: padding re-lays out the list
+   every frame. The arrow (.index-go) keeps its own smaller nudge. */
+.index-n, .index-p { transition: transform 0.5s var(--ease); }
+.index-row:hover > .index-n,
+.index-row:hover > .index-h,
+.index-row:hover > .index-p { transform: translateX(18px); }
 .index-n { font-family: var(--font-display); font-size: var(--fs-xs); letter-spacing: 0.18em; color: var(--accent); font-weight: 500; }
 .index-h { font-family: var(--font-display); text-transform: uppercase; font-size: clamp(1.35rem, 2.4vw, 2rem); font-weight: 600; line-height: 1.05; }
 .index-p { color: var(--muted); font-size: var(--fs-sm); font-weight: 300; max-width: 52ch; }
@@ -518,7 +532,16 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .acc-ico::before { top: 6px; left: 0; width: 14px; height: 1.5px; }
 .acc-ico::after  { left: 6px; top: 0; width: 1.5px; height: 14px; }
 .acc-item.is-open .acc-ico::after { transform: scaleY(0); }
-.acc-a { max-height: 0; overflow: hidden; transition: max-height 0.55s var(--ease); }
+/* 0fr -> 1fr grid row instead of a JS-measured max-height: no stale height
+   after a resize or font swap, and no script needed to size the panel. */
+.acc-a {
+  display: grid; grid-template-rows: 0fr; overflow: hidden;
+  transition: grid-template-rows 0.55s var(--ease);
+}
+.acc-item.is-open .acc-a { grid-template-rows: 1fr; }
+/* The wrapper, not the <p>, is the grid item: padding on the item itself
+   can't shrink below its own size and would leave a gap when closed. */
+.acc-a > div { min-height: 0; overflow: hidden; }
 .acc-a p { color: var(--muted); font-weight: 300; padding-bottom: 28px; max-width: 70ch; }
 
 /* ---------- Forms ---------- */
@@ -555,7 +578,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 .ftr-logo { height: 44px; width: auto; margin-bottom: 22px; }
 .ftr-bar { display: flex; flex-wrap: wrap; gap: 12px 30px; justify-content: space-between; padding-block: 30px; border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--muted-2); letter-spacing: 0.06em; }
 .socials { display: flex; gap: 10px; }
-.socials a { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); transition: all 0.35s var(--ease); }
+.socials a { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted); transition: border-color 0.35s var(--ease), color 0.35s var(--ease), background 0.35s var(--ease); }
 .socials a:hover { border-color: var(--red); color: var(--text); background: color-mix(in oklab, var(--accent) 18%, transparent); }
 .socials svg { width: 17px; height: 17px; }
 
@@ -712,7 +735,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; text-transf
 
 /* ---- Everything below inherits its SECTION accent. No per-item hues. ---- */
 .index-row:hover .index-h { color: var(--accent); }
-.index-h { transition: color 0.35s var(--ease); }
+.index-h { transition: color 0.35s var(--ease), transform 0.5s var(--ease); }
 
 .card { border-top: 2px solid transparent; transition: background 0.5s var(--ease), border-color 0.4s var(--ease); }
 .card:hover { border-top-color: var(--accent); }
@@ -831,9 +854,6 @@ body.has-cursor a, body.has-cursor button, body.has-cursor .dyno-hit { cursor: n
 
 /* ---- Scroll-linked hero ---- */
 .hero-in { will-change: transform, opacity; }
-
-/* ---- Magnetic buttons ---- */
-.btn, .stage-btn { will-change: transform; }
 
 @media (prefers-reduced-motion: reduce) {
   .w > span { transform: none !important; }

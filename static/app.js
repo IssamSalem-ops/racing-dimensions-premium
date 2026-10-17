@@ -240,18 +240,21 @@
     });
   }
 
-  /* ---- 3. Magnetic buttons ---- */
+  /* ---- 3. Magnetic buttons ----
+     Uses the individual `translate` property, not `transform`, so the offset
+     composes with the CSS :active `scale` and hover transforms instead of
+     overriding them. The CSS transition on `translate` eases it home on leave. */
   if (fine && !reduce) {
     $$(".btn, .stage-btn, .chip").forEach(function (b) {
       var raf = false, tx = 0, ty = 0;
-      function apply() { b.style.transform = "translate(" + tx + "px," + ty + "px)"; raf = false; }
+      function apply() { b.style.translate = tx + "px " + ty + "px"; raf = false; }
       b.addEventListener("pointermove", function (e) {
         var r = b.getBoundingClientRect();
         tx = ((e.clientX - r.left) / r.width - 0.5) * 12;
         ty = ((e.clientY - r.top) / r.height - 0.5) * 8;
         if (!raf) { requestAnimationFrame(apply); raf = true; }
       });
-      b.addEventListener("pointerleave", function () { tx = ty = 0; b.style.transform = ""; });
+      b.addEventListener("pointerleave", function () { tx = ty = 0; b.style.translate = ""; });
     });
   }
 
@@ -272,28 +275,10 @@
     }, { passive: true });
   }
 
-  /* ---- 5. Page transition ---- */
-  if (!reduce) {
-    var wipe = document.createElement("div");
-    wipe.className = "wipe";
-    document.body.appendChild(wipe);
-    requestAnimationFrame(function () { wipe.classList.add("is-in"); });
-    document.addEventListener("click", function (e) {
-      var a = e.target.closest("a");
-      if (!a) return;
-      var href = a.getAttribute("href") || "";
-      if (a.target === "_blank" || a.hasAttribute("download")) return;
-      if (/^(#|tel:|mailto:|https?:\/\/)/i.test(href)) return;
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-      e.preventDefault();
-      wipe.classList.remove("is-in");
-      wipe.classList.add("is-out");
-      setTimeout(function () { location.href = href; }, 480);
-    });
-    addEventListener("pageshow", function (ev) {
-      if (ev.persisted) { wipe.classList.remove("is-out"); wipe.classList.add("is-in"); }
-    });
-  }
+  /* ---- 5. Page transition ----
+     Handled entirely in CSS by a cross-document view transition
+     (@view-transition in styles.css). The old JS wipe held every internal
+     link for 480ms before navigation even started; this adds no delay. */
 
   /* ---- 6. Interactive dyno ---- */
   var dyno = $(".dyno");

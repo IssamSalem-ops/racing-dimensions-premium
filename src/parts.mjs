@@ -220,7 +220,7 @@ export function faq(items) {
       <button class="acc-q" type="button" aria-expanded="false" aria-controls="a${i}" id="q${i}">
         <span>${it.q}</span><span class="acc-ico" aria-hidden="true"></span>
       </button>
-      <div class="acc-a" id="a${i}" role="region" aria-labelledby="q${i}"><p>${it.a}</p></div>
+      <div class="acc-a" id="a${i}" role="region" aria-labelledby="q${i}"><div><p>${it.a}</p></div></div>
     </div>`).join("")}</div>`;
 }
 
